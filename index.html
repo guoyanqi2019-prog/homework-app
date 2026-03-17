@@ -1149,6 +1149,38 @@
 </head>
 <body>
 
+<!-- Login Screen -->
+<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(180deg,#c9e8ff,#e8f7ff,#d4f0c0);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:24px;padding:32px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center">
+    <div style="font-size:3rem;margin-bottom:8px">⭐</div>
+    <h2 style="margin-bottom:24px;font-weight:900;color:var(--text)">小星星作业本</h2>
+    
+    <div id="login-form">
+      <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:16px">请选择角色登录</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button class="btn btn-school" style="flex:1" onclick="showLogin('parent')">👨‍👩‍👧 家长/老师</button>
+        <button class="btn btn-extra" style="flex:1" onclick="showLogin('child')">👶 孩子</button>
+      </div>
+    </div>
+    
+    <div id="password-form" style="display:none">
+      <p id="role-label" style="font-size:0.85rem;color:var(--text-light);margin-bottom:12px"></p>
+      <input type="password" id="login-password" class="input-field" placeholder="请输入密码" style="margin-bottom:12px">
+      <button class="btn btn-school" style="width:100%" onclick="doLogin()">登录</button>
+      <button class="btn btn-white" style="width:100%;margin-top:8px" onclick="backToRole()">返回</button>
+      <p id="login-error" style="color:#ff6b6b;font-size:0.8rem;margin-top:12px;display:none">密码错误</p>
+    </div>
+    
+    <div id="setup-form" style="display:none">
+      <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:12px">首次使用，请设置家长密码</p>
+      <input type="password" id="setup-password" class="input-field" placeholder="设置密码（4-6位）" style="margin-bottom:12px">
+      <input type="password" id="setup-password2" class="input-field" placeholder="确认密码" style="margin-bottom:16px">
+      <button class="btn btn-school" style="width:100%" onclick="doSetup()">确认设置</button>
+      <p id="setup-error" style="color:#ff6b6b;font-size:0.8rem;margin-top:12px;display:none"></p>
+    </div>
+  </div>
+</div>
+
 <!-- Cloud background -->
 <div class="cloud-layer">
   <div class="cloud"></div>
@@ -1165,6 +1197,7 @@
     <div class="header-actions">
       <button class="btn btn-white" onclick="openModal('school')">🏫 加学校作业</button>
       <button class="btn btn-white" onclick="openModal('extra')">🎨 加课外班</button>
+      <button class="btn btn-white btn-sm" onclick="logout()" title="切换账号">🚪</button>
     </div>
   </div>
 </header>
@@ -2739,6 +2772,7 @@ function init() {
   renderToday();
   document.getElementById('form-due').value = today();
   loadGistAutoSyncSettings();
+  initLogin();
   
   // 注册 Service Worker 实现 PWA
   if ('serviceWorker' in navigator) {
@@ -2752,6 +2786,120 @@ document.addEventListener('keydown', e => {
 });
 
 init();
+// ====== LOGIN SYSTEM ======
+const ROLE_KEY = 'homework_role';
+const PWD_KEY = 'homework_password';
+let currentRole = null;
+let loginRole = null;
+
+function hasPassword() {
+  return localStorage.getItem(PWD_KEY) !== null;
+}
+
+function checkPassword(pwd) {
+  return localStorage.getItem(PWD_KEY) === pwd;
+}
+
+function showLogin(role) {
+  loginRole = role;
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('password-form').style.display = 'block';
+  document.getElementById('role-label').textContent = role === 'parent' ? '👨‍👩‍👧 家长/老师登录' : '👶 孩子登录';
+  document.getElementById('login-password').value = '';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+function backToRole() {
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('password-form').style.display = 'none';
+}
+
+function doLogin() {
+  const pwd = document.getElementById('login-password').value;
+  if (checkPassword(pwd)) {
+    localStorage.setItem(ROLE_KEY, loginRole);
+    currentRole = loginRole;
+    document.getElementById('login-screen').style.display = 'none';
+    applyRolePermissions();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+function doSetup() {
+  const p1 = document.getElementById('setup-password').value;
+  const p2 = document.getElementById('setup-password2').value;
+  const errorEl = document.getElementById('setup-error');
+  
+  if (p1.length < 4 || p1.length > 6) {
+    errorEl.textContent = '密码需要4-6位';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (p1 !== p2) {
+    errorEl.textContent = '两次密码不一致';
+    errorEl.style.display = 'block';
+    return;
+  }
+  
+  localStorage.setItem(PWD_KEY, p1);
+  localStorage.setItem(ROLE_KEY, 'parent');
+  currentRole = 'parent';
+  document.getElementById('login-screen').style.display = 'none';
+  applyRolePermissions();
+}
+
+function applyRolePermissions() {
+  const isParent = currentRole === 'parent';
+  
+  // 隐藏/显示添加按钮
+  document.querySelectorAll('.header-actions').forEach(el => {
+    el.style.display = isParent ? 'flex' : 'none';
+  });
+  
+  // 隐藏/显示删除按钮
+  document.querySelectorAll('.hw-actions .btn-danger').forEach(el => {
+    el.style.display = isParent ? 'inline-flex' : 'none';
+  });
+  
+  // 隐藏/显示编辑按钮
+  document.querySelectorAll('.hw-actions .btn-white').forEach(el => {
+    if (el.textContent.includes('编辑')) {
+      el.style.display = isParent ? 'inline-flex' : 'none';
+    }
+  });
+  
+  // 隐藏打卡记录和备份同步（孩子看不到）
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  if (tabBtns[2]) tabBtns[2].style.display = isParent ? '' : 'none'; // 打卡
+  if (tabBtns[3]) tabBtns[3].style.display = isParent ? '' : 'none'; // 备份
+  
+  // 更新 logo 显示角色
+  const logo = document.querySelector('.logo');
+  if (logo) {
+    logo.innerHTML = isParent 
+      ? '<span>⭐</span> 小星星作业本'
+      : '<span>⭐</span> 小星星作业本 <span style="font-size:0.8rem;color:#ff6b6b">👶</span>';
+  }
+}
+
+function initLogin() {
+  if (!hasPassword()) {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('setup-form').style.display = 'block';
+  } else {
+    currentRole = localStorage.getItem(ROLE_KEY) || 'parent';
+    if (currentRole) {
+      document.getElementById('login-screen').style.display = 'none';
+      applyRolePermissions();
+    }
+  }
+}
+
+function logout() {
+  localStorage.removeItem(ROLE_KEY);
+  location.reload();
+}
 </script>
 </body>
 </html>
