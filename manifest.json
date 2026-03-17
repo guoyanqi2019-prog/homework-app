@@ -1,0 +1,32 @@
+{
+  "name": "小星星作业本",
+  "short_name": "作业本",
+  "description": "小学生作业管理应用",
+  "start_url": "./homework-manager(12).html",
+  "display": "standalone",
+  "background_color": "#E8F4FD",
+  "theme_color": "#FFD93D",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⭐</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "今日作业",
+      "url": "./homework-manager(12).html?tab=today"
+    },
+    {
+      "name": "全部作业",
+      "url": "./homework-manager(12).html?tab=all"
+    }
+  ]
+}
