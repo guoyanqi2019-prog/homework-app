@@ -1,7 +1,8 @@
 const CACHE_NAME = 'homework-v1';
 const urlsToCache = [
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icon.svg'
 ];
 
 self.addEventListener('install', event => {
