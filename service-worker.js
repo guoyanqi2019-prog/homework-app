@@ -1,6 +1,6 @@
 const CACHE_NAME = 'homework-v1';
 const urlsToCache = [
-  './homework-manager(12).html',
+  './index.html',
   './manifest.json'
 ];
 

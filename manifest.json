@@ -2,7 +2,7 @@
   "name": "小星星作业本",
   "short_name": "作业本",
   "description": "小学生作业管理应用",
-  "start_url": "./homework-manager(12).html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#E8F4FD",
   "theme_color": "#FFD93D",
@@ -22,11 +22,11 @@
   "shortcuts": [
     {
       "name": "今日作业",
-      "url": "./homework-manager(12).html?tab=today"
+      "url": "./index.html?tab=today"
     },
     {
       "name": "全部作业",
-      "url": "./homework-manager(12).html?tab=all"
+      "url": "./index.html?tab=all"
     }
   ]
 }
