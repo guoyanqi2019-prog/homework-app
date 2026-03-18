@@ -440,16 +440,16 @@
     <!-- Step 1: Choose Role -->
     <div id="login-form">
       <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:16px">请选择身份</p>
-      <button class="role-btn parent" id="btn-parent" onclick="selectRole('parent')">👨‍👩‍👧 家长/老师</button>
-      <button class="role-btn child" id="btn-child" onclick="selectRole('child')">👶 孩子</button>
+      <button class="role-btn parent" id="btn-parent">👨‍👩‍👧 家长/老师</button>
+      <button class="role-btn child" id="btn-child">👶 孩子</button>
     </div>
     
-    <!-- Step 2: Enter/Set Password -->
+    <!-- Step 2: Enter Password -->
     <div id="password-form" style="display:none">
       <p id="role-label" style="font-size:0.9rem;font-weight:700;color:var(--primary);margin-bottom:12px"></p>
       <input type="password" id="login-password" placeholder="请输入密码" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:12px">
-      <button onclick="doLogin()" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">登录</button>
-      <button onclick="backToRole()" style="background:none;border:none;color:var(--text-light);margin-top:10px;cursor:pointer;font-size:0.85rem">← 返回选择身份</button>
+      <button id="btn-login" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">登录</button>
+      <button id="btn-back" style="background:none;border:none;color:var(--text-light);margin-top:10px;cursor:pointer;font-size:0.85rem">← 返回选择身份</button>
       <p id="login-error" style="color:var(--danger);font-size:0.85rem;margin-top:10px;display:none"></p>
     </div>
   </div>
@@ -2264,6 +2264,17 @@ function init() {
   renderToday();
   document.getElementById('form-due').value = today();
   initLogin();
+  
+  // 绑定登录按钮事件
+  document.getElementById('btn-parent').addEventListener('click', () => selectRole('parent'));
+  document.getElementById('btn-child').addEventListener('click', () => selectRole('child'));
+  document.getElementById('btn-login').addEventListener('click', doLogin);
+  document.getElementById('btn-back').addEventListener('click', backToRole);
+  
+  // 回车登录
+  document.getElementById('login-password').addEventListener('keypress', e => {
+    if (e.key === 'Enter') doLogin();
+  });
 }
 
 document.addEventListener('keydown', e => {
