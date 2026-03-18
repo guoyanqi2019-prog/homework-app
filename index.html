@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FFD93D">
+<meta name="theme-color" content="#6C5CE7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="小星星作业本">
@@ -12,103 +12,96 @@
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sky: #E8F4FD;
-    --cloud: #FFFFFF;
-    --sun: #FFD93D;
-    --sun-deep: #FF9F1C;
-    --grass: #6BCB77;
-    --grass-deep: #4D9E57;
-    --school: #4D96FF;
-    --school-deep: #2D6BE4;
-    --extra: #FF6B9D;
-    --extra-deep: #D94F7E;
-    --done: #6BCB77;
-    --pending: #FFD93D;
-    --missed: #FF6B6B;
+    --primary: #6C5CE7;
+    --primary-light: #A29BFE;
+    --primary-dark: #5B4BC4;
+    --accent: #00CEC9;
+    --accent-light: #81ECEC;
+    --warning: #FDCB6E;
+    --success: #00B894;
+    --danger: #E17055;
+    --bg: #F8F9FD;
+    --card: #FFFFFF;
     --text: #2D3436;
     --text-light: #636E72;
-    --card-shadow: 0 8px 32px rgba(0,0,0,0.10);
-    --radius: 20px;
+    --text-muted: #B2BEC3;
+    --border: #DFE6E9;
+    --shadow: 0 4px 20px rgba(108, 92, 231, 0.12);
+    --shadow-hover: 0 8px 32px rgba(108, 92, 231, 0.2);
+    --radius: 16px;
+    --radius-sm: 10px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Nunito', 'Ma Shan Zheng', sans-serif;
-    background: var(--sky);
+    background: var(--bg);
     min-height: 100vh;
     color: var(--text);
     overflow-x: hidden;
+    padding-bottom: 80px;
   }
 
-  /* Animated sky background */
-  body::before {
-    content: '';
+  /* ===== LOGIN ===== */
+  #login-screen {
     position: fixed;
     inset: 0;
-    background: linear-gradient(180deg, #c9e8ff 0%, #e8f7ff 60%, #d4f0c0 100%);
-    z-index: -2;
+    background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 50%, #81ECEC 100%);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
   }
+  #login-screen > div {
+    background: var(--card);
+    border-radius: 28px;
+    padding: 40px 32px;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  #login-screen .logo-big { font-size: 4rem; margin-bottom: 12px; }
+  #login-screen h2 { font-size: 1.6rem; font-weight: 900; color: var(--primary); margin-bottom: 28px; }
+  .role-btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+  }
+  .role-btn.parent { background: var(--primary); color: #fff; }
+  .role-btn.child { background: var(--accent); color: #fff; }
+  .role-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  #password-form input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
+  #password-form input:focus { border-color: var(--primary); }
+  #password-form button { width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; background: var(--primary); color: #fff; }
+  #login-error { color: var(--danger); font-size: 0.85rem; margin-top: 10px; }
 
-  /* Floating clouds */
-  .cloud-layer {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: -1;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .cloud {
-    position: absolute;
-    background: rgba(255,255,255,0.85);
-    border-radius: 50px;
-    animation: drift linear infinite;
-  }
-  .cloud::before, .cloud::after {
-    content: '';
-    position: absolute;
-    background: inherit;
-    border-radius: 50%;
-  }
-  .cloud:nth-child(1) { width:120px;height:40px;top:8%;left:-140px;animation-duration:28s;animation-delay:0s; }
-  .cloud:nth-child(1)::before { width:60px;height:60px;top:-30px;left:20px; }
-  .cloud:nth-child(1)::after { width:40px;height:40px;top:-20px;left:55px; }
-  .cloud:nth-child(2) { width:80px;height:28px;top:20%;left:-100px;animation-duration:22s;animation-delay:-8s; }
-  .cloud:nth-child(2)::before { width:40px;height:40px;top:-20px;left:10px; }
-  .cloud:nth-child(3) { width:160px;height:50px;top:5%;left:-180px;animation-duration:35s;animation-delay:-15s; }
-  .cloud:nth-child(3)::before { width:80px;height:70px;top:-40px;left:30px; }
-  .cloud:nth-child(3)::after { width:60px;height:50px;top:-25px;left:80px; }
-  @keyframes drift { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 200px)); } }
-
-  /* Header */
+  /* ===== HEADER ===== */
   header {
-    background: linear-gradient(135deg, #FFD93D 0%, #FF9F1C 100%);
-    padding: 0 24px;
-    box-shadow: 0 4px 20px rgba(255,159,28,0.3);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 16px 20px;
     position: sticky;
     top: 0;
     z-index: 100;
+    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.25);
   }
   .header-inner {
-    max-width: 960px;
+    max-width: 600px;
     margin: 0 auto;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 68px;
   }
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.5rem;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
-  }
-  .logo span { font-size: 2rem; animation: spin 4s linear infinite; display: inline-block; }
-  @keyframes spin { 0%,100%{transform:rotate(-10deg)} 50%{transform:rotate(10deg)} }
-
+  .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 900; color: #fff; }
+  .logo span { font-size: 2rem; }
   .header-actions { display: flex; gap: 8px; }
   .btn {
     border: none;
@@ -120,1270 +113,412 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .btn:active { transform: translateY(0); }
-  .btn-white { background: #fff; color: var(--sun-deep); padding: 8px 16px; font-size: 0.85rem; }
-  .btn-school { background: var(--school); color: #fff; padding: 10px 20px; font-size: 0.9rem; }
-  .btn-extra { background: var(--extra); color: #fff; padding: 10px 20px; font-size: 0.9rem; }
-  .btn-done { background: var(--done); color: #fff; padding: 8px 14px; font-size: 0.82rem; }
-  .btn-danger { background: #ff6b6b; color: #fff; padding: 6px 12px; font-size: 0.8rem; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-white { background: #fff; color: var(--primary); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-danger { background: var(--danger); color: #fff; }
   .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
-  .btn-outline { background: transparent; border: 2px solid currentColor; }
 
-  /* Nav tabs */
+  /* ===== NAV ===== */
   .nav-tabs {
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(10px);
+    background: var(--card);
     display: flex;
-    justify-content: center;
-    gap: 4px;
-    padding: 10px 16px;
+    justify-content: space-around;
+    padding: 12px 16px;
     position: sticky;
-    top: 68px;
+    top: 60px;
     z-index: 99;
     box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border-bottom: 1px solid var(--border);
   }
   .tab-btn {
     background: none;
     border: none;
-    border-radius: 50px;
-    padding: 8px 22px;
+    padding: 10px 20px;
     font-family: inherit;
     font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: var(--text-light);
-    transition: all 0.2s;
-  }
-  .tab-btn.active { background: var(--sun); color: var(--text); box-shadow: 0 2px 8px rgba(255,211,61,0.4); }
-  .tab-btn:hover:not(.active) { background: rgba(0,0,0,0.05); }
-
-  /* Main content */
-  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 80px; }
-
-  /* Section panels */
-  .panel { display: none; }
-  .panel.active { display: block; animation: fadeUp 0.3s ease; }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-
-  /* Category toggle */
-  .cat-toggle {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .cat-btn {
-    border: none;
-    border-radius: 50px;
-    padding: 10px 24px;
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 0.92rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0.55;
-  }
-  .cat-btn.active { opacity: 1; transform: scale(1.05); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
-  .cat-school { background: var(--school); color: #fff; }
-  .cat-extra { background: var(--extra); color: #fff; }
-
-  /* Section title */
-  .section-title {
-    font-size: 1.4rem;
-    font-weight: 900;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  /* Homework cards */
-  .hw-list { display: flex; flex-direction: column; gap: 14px; }
-
-  .hw-card {
-    background: var(--cloud);
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    padding: 18px 20px;
-    border-left: 6px solid var(--school);
-    transition: box-shadow 0.2s, transform 0.2s;
-    animation: fadeUp 0.3s ease both;
-  }
-  .hw-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.13); }
-  .hw-card.extra { border-left-color: var(--extra); }
-  .hw-card.completed { opacity: 0.7; background: #f8fff8; }
-
-  .hw-card-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .hw-check {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 3px solid #ddd;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    transition: all 0.2s;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-  .hw-check.checked { background: var(--done); border-color: var(--done); color: #fff; }
-  .hw-check:hover { transform: scale(1.15); }
-
-  .hw-info { flex: 1; }
-  .hw-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin-bottom: 4px;
-  }
-  .hw-card.completed .hw-title { text-decoration: line-through; color: var(--text-light); }
-  .hw-meta {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    font-size: 0.78rem;
-    color: var(--text-light);
-  }
-  .hw-tag {
-    background: rgba(0,0,0,0.06);
-    border-radius: 20px;
-    padding: 2px 10px;
-    font-weight: 600;
-  }
-  .hw-tag.school { background: rgba(77,150,255,0.15); color: var(--school-deep); }
-  .hw-tag.extra { background: rgba(255,107,157,0.15); color: var(--extra-deep); }
-  .hw-tag.due-soon { background: rgba(255,159,28,0.2); color: var(--sun-deep); }
-  .hw-tag.overdue { background: rgba(255,107,107,0.2); color: #c0392b; }
-
-  .hw-desc {
-    font-size: 0.88rem;
-    color: var(--text-light);
-    margin: 8px 0;
-    line-height: 1.5;
-  }
-
-  .hw-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-  }
-
-  /* Upload area */
-  .upload-zone {
-    border: 2.5px dashed #c8d8e8;
-    border-radius: 14px;
-    padding: 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
     font-size: 0.85rem;
-    color: var(--text-light);
-    margin-top: 10px;
-  }
-  .upload-zone:hover { border-color: var(--school); background: rgba(77,150,255,0.05); }
-  .upload-zone .upload-icon { font-size: 1.8rem; display: block; margin-bottom: 4px; }
-
-  /* Media previews */
-  .media-grid {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 8px;
-  }
-  .media-thumb {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 10px;
-    overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    color: var(--text-muted);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
   }
-  .media-thumb img, .media-thumb video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .media-thumb .play-icon {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
+  .tab-btn.active { background: var(--primary); color: #fff; }
+  .tab-btn:hover:not(.active) { background: rgba(108,92,231,0.1); color: var(--primary); }
+
+  /* ===== MAIN ===== */
+  main { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
+
+  /* ===== PANEL ===== */
+  .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ===== DATE SELECTOR ===== */
+  .date-nav {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-size: 1.6rem;
+    justify-content: space-between;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
   }
-  .media-thumb .del-media {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    background: rgba(255,50,50,0.8);
+  .date-nav button {
+    background: var(--primary);
     color: #fff;
     border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.65rem;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
+    transition: all 0.2s;
   }
+  .date-nav button:hover { background: var(--primary-dark); transform: scale(1.1); }
+  .date-display { text-align: center; }
+  .date-display .date-label { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
+  .date-display .date-week { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+  .date-nav input[type="date"] {
+    position: absolute;
+    opacity: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+  .date-nav-right { position: relative; }
 
-  /* Gist sync */
-  .gist-box {
-    background: var(--cloud);
+  /* ===== STATS ===== */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--card);
+    border-radius: var(--radius-sm);
+    padding: 14px 8px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .stat-emoji { font-size: 1.4rem; }
+  .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary); }
+  .stat-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+
+  /* ===== HW LIST ===== */
+  .hw-list { display: flex; flex-direction: column; gap: 12px; }
+  
+  .section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 2px; background: var(--border); border-radius: 2px; }
+
+  /* ===== HW CARD ===== */
+  .hw-card {
+    background: var(--card);
     border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    padding: 22px;
-    margin-bottom: 24px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
   }
-  .gist-box h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 14px; }
-  .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .input-field {
-    flex: 1;
-    min-width: 200px;
-    border: 2px solid #e0e8f0;
-    border-radius: 12px;
-    padding: 10px 14px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .input-field:focus { border-color: var(--school); }
+  .hw-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .hw-card.school { border-left-color: var(--primary); }
+  .hw-card.extra { border-left-color: var(--accent); }
+  .hw-card.completed { opacity: 0.6; background: #f8fff8; border-left-color: var(--success); }
 
-  .sync-status {
-    margin-top: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: none;
-  }
-  .sync-status.ok { background: rgba(107,203,119,0.2); color: var(--grass-deep); display: block; }
-  .sync-status.err { background: rgba(255,107,107,0.2); color: #c0392b; display: block; }
-  .sync-status.loading { background: rgba(255,211,61,0.2); color: var(--sun-deep); display: block; }
-
-  /* Add homework modal */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(6px);
-    z-index: 200;
+  .hw-card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+  .hw-check {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    font-size: 1.1rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .hw-check.checked { background: var(--success); border-color: var(--success); color: #fff; }
+  .hw-check:hover { transform: scale(1.15); border-color: var(--primary); }
+  
+  .hw-info { flex: 1; }
+  .hw-subject { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
+  .hw-title { font-size: 1rem; font-weight: 800; }
+  .hw-card.completed .hw-title { text-decoration: line-through; color: var(--text-muted); }
+  
+  .hw-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 0.75rem; }
+  .hw-tag { padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+  .hw-tag.due-today { background: rgba(253, 203, 110, 0.2); color: #E17055; }
+  .hw-tag.overdue { background: rgba(225, 112, 85, 0.2); color: var(--danger); }
+  .hw-tag.school { background: rgba(108, 92, 231, 0.1); color: var(--primary); }
+  .hw-tag.extra { background: rgba(0, 206, 201, 0.1); color: var(--accent); }
+
+  .hw-desc { font-size: 0.85rem; color: var(--text-light); margin: 8px 0; line-height: 1.5; }
+  
+  .hw-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-muted);
+  }
+  .empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 12px; opacity: 0.5; }
+  .empty-state p { font-size: 0.95rem; }
+
+  /* ===== MEDIA ===== */
+  .media-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .media-thumb { position: relative; width: 70px; height: 70px; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; }
+  .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .media-thumb video { width: 100%; height: 100%; object-fit: cover; }
+  .play-icon { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 200;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s;
   }
   .modal-overlay.open { opacity: 1; pointer-events: all; }
   .modal {
-    background: var(--cloud);
-    border-radius: 24px;
-    padding: 28px;
+    background: var(--card);
+    border-radius: 24px 24px 0 0;
+    padding: 24px;
     width: 100%;
-    max-width: 480px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    transform: scale(0.93) translateY(10px);
-    transition: transform 0.25s;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
   }
-  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
-  .modal h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 18px; }
-  .form-group { margin-bottom: 14px; }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 18px; color: var(--primary); }
+  .form-group { margin-bottom: 16px; }
   .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-light); }
-  .form-group select {
+  .form-group input, .form-group textarea, .form-group select {
     width: 100%;
-    border: 2px solid #e0e8f0;
-    border-radius: 12px;
-    padding: 10px 14px;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     outline: none;
-    background: #fff;
-    cursor: pointer;
     transition: border-color 0.2s;
   }
-  .form-group select:focus, .form-group textarea:focus, .form-group input:focus { border-color: var(--school); }
-  .form-group textarea, .form-group input[type="text"], .form-group input[type="date"] {
-    width: 100%;
-    border: 2px solid #e0e8f0;
-    border-radius: 12px;
-    padding: 10px 14px;
-    font-family: inherit;
-    font-size: 0.9rem;
-    outline: none;
-    resize: vertical;
-    transition: border-color 0.2s;
-  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); }
   .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions .btn { flex: 1; justify-content: center; padding: 14px; }
 
-  /* Check-in / Calendar */
-  .checkin-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-  }
-  .month-nav {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--cloud);
-    border-radius: 50px;
-    padding: 6px 16px;
-    box-shadow: var(--card-shadow);
-  }
-  .month-nav button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: var(--text);
-    padding: 0 4px;
-    transition: transform 0.15s;
-  }
-  .month-nav button:hover { transform: scale(1.3); }
-  .month-label { font-weight: 800; font-size: 1rem; min-width: 90px; text-align: center; }
-
-  .calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-  .cal-weekday {
-    text-align: center;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--text-light);
-    padding: 4px 0;
-  }
-  .cal-day {
-    background: var(--cloud);
-    border-radius: 12px;
-    aspect-ratio: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    position: relative;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    transition: transform 0.15s, box-shadow 0.15s;
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-  .cal-day:hover { transform: scale(1.08); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
-  .cal-day.empty { background: transparent; box-shadow: none; cursor: default; }
-  .cal-day.today { border: 3px solid var(--sun); }
-  .cal-day.all-done { background: linear-gradient(135deg, #b8f5c2, #6BCB77); color: #1a5c26; }
-  .cal-day.partial { background: linear-gradient(135deg, #fff6c0, #FFD93D); color: #7a5700; }
-  .cal-day.none-done { background: linear-gradient(135deg, #ffd5d5, #FF6B6B); color: #7a1a1a; }
-  .cal-day.future { opacity: 0.4; cursor: default; }
-  .cal-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    margin-top: 2px;
-    opacity: 0.5;
-  }
-
-  /* Stats cards */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 14px;
-    margin-bottom: 24px;
-  }
-  .stat-card {
-    background: var(--cloud);
-    border-radius: 18px;
-    padding: 16px;
-    box-shadow: var(--card-shadow);
-    text-align: center;
-  }
-  .stat-emoji { font-size: 2rem; margin-bottom: 4px; }
-  .stat-value { font-size: 1.8rem; font-weight: 900; }
-  .stat-label { font-size: 0.75rem; color: var(--text-light); font-weight: 600; }
-
-  /* Day detail popup */
-  .day-detail {
-    background: var(--cloud);
-    border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    padding: 20px;
-    display: none;
-    animation: fadeUp 0.2s ease;
-  }
-  .day-detail.open { display: block; }
-  .day-detail h4 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; }
-  .detail-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-    font-size: 0.88rem;
-  }
-  .detail-item:last-child { border-bottom: none; }
-  .status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-done { background: var(--done); }
-  .dot-miss { background: var(--missed); }
-
-  /* Streak banner */
-  .streak-banner {
-    background: linear-gradient(135deg, #FFD93D, #FF9F1C);
-    border-radius: var(--radius);
-    padding: 16px 22px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 6px 20px rgba(255,159,28,0.25);
-    color: #fff;
-  }
-  .streak-fire { font-size: 2.5rem; animation: bounce 1s infinite; }
-  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
-  .streak-text h3 { font-size: 1.1rem; font-weight: 900; }
-  .streak-text p { font-size: 0.82rem; opacity: 0.85; }
-
-  /* Empty state */
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--text-light);
-  }
-  .empty-state .empty-emoji { font-size: 4rem; display: block; margin-bottom: 12px; }
-  .empty-state p { font-size: 0.95rem; margin-bottom: 16px; }
-
-  /* Media viewer */
-  .media-viewer {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.9);
-    z-index: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s;
-  }
-  .media-viewer.open { opacity: 1; pointer-events: all; }
-  .media-viewer img, .media-viewer video {
-    max-width: 92vw;
-    max-height: 88vh;
-    border-radius: 12px;
-    box-shadow: 0 0 60px rgba(0,0,0,0.5);
-  }
-  .viewer-close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: #fff;
-    font-size: 1.5rem;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .viewer-close:hover { background: rgba(255,255,255,0.3); }
-  .viewer-toolbar {
-    position: absolute;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    background: rgba(0,0,0,0.5);
-    backdrop-filter: blur(10px);
-    border-radius: 50px;
-    padding: 8px 16px;
-  }
-  .viewer-btn {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: #fff;
-    font-size: 0.85rem;
-    font-weight: 700;
-    font-family: inherit;
-    padding: 8px 18px;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: background 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .viewer-btn:hover { background: rgba(255,255,255,0.3); }
-  .viewer-btn.dl { background: rgba(77,150,255,0.7); }
-  .viewer-btn.dl:hover { background: rgba(77,150,255,0.9); }
-  .viewer-filename {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: rgba(255,255,255,0.7);
-    font-size: 0.82rem;
-    font-weight: 600;
-    max-width: 60vw;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  /* Download button on media thumb */
-  .media-thumb .dl-media {
-    position: absolute;
-    bottom: 3px;
-    right: 3px;
-    background: rgba(77,150,255,0.85);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.62rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-  }
-  /* Download all button */
-  .btn-download-all {
-    background: linear-gradient(135deg, #4D96FF, #2D6BE4);
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 0.82rem;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s;
-  }
-  .btn-download-all:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(77,150,255,0.4); }
-
-  /* Progress bar */
-  .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-  .progress-bar {
-    flex: 1;
-    height: 8px;
-    background: #e8edf3;
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--grass), var(--sun));
-    border-radius: 10px;
-    transition: width 0.5s ease;
-  }
-  .progress-label { font-size: 0.78rem; font-weight: 700; color: var(--text-light); min-width: 32px; }
-
-  /* Toast */
+  /* ===== TOAST ===== */
   .toast {
     position: fixed;
-    bottom: 30px;
+    bottom: 100px;
     left: 50%;
     transform: translateX(-50%) translateY(20px);
-    background: #2d3436;
+    background: var(--text);
     color: #fff;
-    padding: 12px 22px;
+    padding: 12px 24px;
     border-radius: 50px;
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     font-weight: 700;
     z-index: 500;
     opacity: 0;
     transition: all 0.3s;
-    white-space: nowrap;
     pointer-events: none;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  @media(max-width: 600px) {
-    .header-inner { height: 60px; }
-    .logo { font-size: 1.2rem; }
-    .tab-btn { padding: 7px 14px; font-size: 0.82rem; }
-    .hw-card { padding: 14px 16px; }
-    main { padding: 16px 12px 80px; }
-  }
+  /* ===== SYNC ===== */
+  .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); }
+  .card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
 
-  /* ====== AI SECTION ====== */
-  .ai-section {
-    background: linear-gradient(135deg, #f0f7ff 0%, #fdf0ff 100%);
-    border: 2px solid #e0eeff;
-    border-radius: 16px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-  }
-  .ai-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .ai-badge {
-    background: linear-gradient(135deg, #4D96FF, #9B59B6);
-    color: #fff;
-    font-size: 0.72rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-  }
-  .ai-type-chips {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 10px;
-  }
-  .type-chip {
-    border: 2.5px solid transparent;
-    border-radius: 50px;
-    padding: 7px 18px;
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0.5;
-    background: #fff;
-  }
-  .type-chip.school { color: var(--school-deep); border-color: var(--school); }
-  .type-chip.extra { color: var(--extra-deep); border-color: var(--extra); }
-  .type-chip.active { opacity: 1; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
-  .type-chip.school.active { background: var(--school); color: #fff; }
-  .type-chip.extra.active { background: var(--extra); color: #fff; }
+  /* ===== CALENDAR ===== */
+  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
+  .cal-weekday { text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); padding: 6px 0; }
+  .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+  .cal-day:hover { transform: scale(1.1); }
+  .cal-day.today { border: 2px solid var(--primary); color: var(--primary); }
+  .cal-day.all-done { background: var(--success); color: #fff; }
+  .cal-day.partial { background: var(--warning); color: #fff; }
+  .cal-day.none-done { background: var(--danger); color: #fff; }
+  .cal-day.empty { cursor: default; }
+  .cal-day.future { opacity: 0.3; }
 
-  .ai-input-wrap {
-    position: relative;
-  }
-  .ai-textarea {
-    width: 100%;
-    border: 2px solid #d0e4ff;
-    border-radius: 12px;
-    padding: 10px 14px;
-    padding-bottom: 42px;
-    font-family: inherit;
-    font-size: 0.88rem;
-    outline: none;
-    resize: none;
-    background: #fff;
-    transition: border-color 0.2s;
-    line-height: 1.5;
-  }
-  .ai-textarea:focus { border-color: var(--school); }
-  .ai-go-btn {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    background: linear-gradient(135deg, #4D96FF, #9B59B6);
-    color: #fff;
-    border: none;
-    border-radius: 50px;
-    padding: 7px 16px;
-    font-family: inherit;
-    font-weight: 800;
-    font-size: 0.82rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .ai-go-btn:hover { transform: scale(1.04); box-shadow: 0 4px 12px rgba(77,150,255,0.4); }
-  .ai-go-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-
-  .ai-key-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .ai-divider {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 14px 0 4px;
-    color: var(--text-light);
-    font-size: 0.78rem;
-    font-weight: 600;
-  }
-  .ai-divider::before, .ai-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #d8e8f8;
-  }
-  .ai-error {
-    background: rgba(255,107,107,0.12);
-    color: #c0392b;
-    border-radius: 10px;
-    padding: 8px 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin-top: 8px;
-  }
-  /* AI fill animation on fields */
-  @keyframes aiFillPulse {
-    0% { background: #fff; }
-    30% { background: #eef6ff; }
-    100% { background: #fff; }
-  }
-  .ai-filled { animation: aiFillPulse 0.6s ease; }
-
-  /* AI batch preview cards */
-  .preview-card {
-    background: #fff;
-    border: 2px solid #e0eeff;
-    border-radius: 14px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-    position: relative;
-    transition: border-color 0.2s;
-    animation: fadeUp 0.25s ease both;
-  }
-  .preview-card:hover { border-color: var(--school); }
-  .preview-card.saved { opacity: 0.45; background: #f8fff8; border-color: #b8e8c0; }
-  .preview-card.removed { display: none; }
-  .preview-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-    flex-wrap: wrap;
-  }
-  .preview-subject {
-    font-weight: 800;
-    font-size: 0.88rem;
-  }
-  .preview-title {
-    font-size: 0.85rem;
-    color: var(--text);
-    flex: 1;
-  }
-  .preview-desc {
-    font-size: 0.78rem;
-    color: var(--text-light);
-    margin-top: 2px;
-    line-height: 1.4;
-  }
-  .preview-meta {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-top: 6px;
-    align-items: center;
-  }
-  .preview-tag {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 2px 9px;
-    border-radius: 20px;
-  }
-  .preview-tag.school { background: rgba(77,150,255,0.15); color: var(--school-deep); }
-  .preview-tag.extra { background: rgba(255,107,157,0.15); color: var(--extra-deep); }
-  .preview-tag.due { background: rgba(255,211,61,0.2); color: var(--sun-deep); }
-  .preview-actions {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-  }
-  .preview-type-toggle {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 2px solid;
-    background: transparent;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s;
-  }
-  .preview-type-toggle.school { border-color: var(--school); color: var(--school-deep); }
-  .preview-type-toggle.school:hover { background: var(--school); color: #fff; }
-  .preview-type-toggle.extra { border-color: var(--extra); color: var(--extra-deep); }
-  .preview-type-toggle.extra:hover { background: var(--extra); color: #fff; }
-  .preview-save-btn {
-    background: var(--done);
-    color: #fff;
-    border: none;
-    border-radius: 20px;
-    padding: 3px 12px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    font-family: inherit;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .preview-save-btn:hover { background: var(--grass-deep); }
-  .preview-del-btn {
-    background: none;
-    border: none;
-    color: var(--text-light);
-    font-size: 0.85rem;
-    cursor: pointer;
-    padding: 2px 6px;
-    border-radius: 50%;
-    transition: all 0.15s;
-    margin-left: auto;
-  }
-  .preview-del-btn:hover { background: #fee; color: #c0392b; }
-
-  /* ====== SYNC BAR ====== */
-  .sync-bar {
-    background: var(--cloud);
+  /* ===== STREAK ===== */
+  .streak-banner {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     border-radius: var(--radius);
-    box-shadow: var(--card-shadow);
-    padding: 14px 18px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
     margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .sync-indicator { font-size: 1.1rem; }
-  .sync-indicator.syncing { animation: pulse-spin 1s linear infinite; display: inline-block; }
-  @keyframes pulse-spin { to { transform: rotate(360deg); } }
-
-  .auto-sync-row {
-    background: #f7faff;
-    border-radius: 12px;
-    padding: 12px 14px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-  }
-  .toggle-label {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    color: var(--text);
-  }
-  .toggle-label input[type="checkbox"] {
-    accent-color: var(--school);
-    width: 15px;
-    height: 15px;
-  }
-  /* Sync log entries */
-  .log-entry { padding: 2px 0; border-bottom: 1px solid #f0f0f0; }
-  .log-entry:last-child { border-bottom: none; }
-  .log-ok { color: var(--grass-deep); }
-  .log-err { color: #c0392b; }
-  .log-info { color: var(--school-deep); }
-
-  /* provider switcher */
-  .provider-btn {
-    border: 2px solid #dde8f5;
-    background: #fff;
-    border-radius: 50px;
-    padding: 7px 16px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 0.84rem;
-    cursor: pointer;
-    color: var(--text-light);
-    transition: all 0.18s;
-  }
-  .provider-btn.active { background: var(--school); border-color: var(--school); color: #fff; box-shadow: 0 3px 10px rgba(77,150,255,0.35); }
-  .provider-btn:hover:not(.active) { border-color: var(--school); color: var(--school-deep); }
-
-  /* Drive export card */
-  .drive-export-card {
-    background: linear-gradient(135deg, #4D96FF 0%, #6BCB77 100%);
-    border-radius: var(--radius);
-    padding: 22px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 8px 28px rgba(77,150,255,0.3);
-    flex-wrap: wrap;
-  }
-
-  /* Synology Photos hero card */
-  .photos-hero-card {
-    background: linear-gradient(135deg, #1a6fbf 0%, #9B59B6 100%);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 8px 28px rgba(26,111,191,0.3);
-    flex-wrap: wrap;
-  }
-
-  /* Backup hero card */
-  .backup-hero {
-    background: linear-gradient(135deg, #4D96FF 0%, #6BCB77 100%);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 16px;
-    box-shadow: 0 8px 28px rgba(77,150,255,0.25);
-    flex-wrap: wrap;
-  }
-  .backup-hero-icon { font-size: 2.6rem; flex-shrink: 0; }
-  .backup-hero-info { flex: 1; min-width: 160px; color: #fff; }
-  .backup-hero-info h3 { font-size: 1.05rem; font-weight: 900; margin-bottom: 4px; }
-  .backup-hero-info p  { font-size: 0.78rem; opacity: 0.88; line-height: 1.5; }
-  .btn-backup-export {
-    background: #fff;
-    color: var(--school-deep);
-    border: none;
-    border-radius: 50px;
-    padding: 12px 22px;
-    font-family: inherit;
-    font-weight: 900;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.12);
-    white-space: nowrap;
-  }
-  .btn-backup-export:hover { transform: scale(1.05); }
-  .drive-icon { font-size: 2.8rem; flex-shrink: 0; }
-  .drive-info { flex: 1; min-width: 180px; color: #fff; }
-  .drive-info h3 { font-size: 1rem; font-weight: 900; margin-bottom: 5px; }
-  .drive-info p { font-size: 0.8rem; opacity: 0.88; line-height: 1.5; }
-  .drive-actions { display: flex; flex-direction: column; align-items: center; }
-  .btn-drive-export {
-    background: #fff;
-    color: var(--school-deep);
-    border: none;
-    border-radius: 50px;
-    padding: 12px 24px;
-    font-family: inherit;
-    font-weight: 900;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    white-space: nowrap;
-  }
-  .btn-drive-export:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
-
-  /* field label */
-  .field-label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-light);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-  .saved-badge {
-    background: #6BCB77;
     color: #fff;
-    font-size: 0.68rem;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 800;
   }
-  .code-tag { background: #f0f4f8; padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }
+  .streak-fire { font-size: 2.2rem; }
+  .streak-text h3 { font-size: 1rem; font-weight: 900; }
+  .streak-text p { font-size: 0.78rem; opacity: 0.85; }
 
-  /* setup steps */
-  .setup-steps { display: flex; flex-direction: column; gap: 8px; }
-  .setup-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: 0.82rem;
-    color: var(--text-light);
-    line-height: 1.5;
-  }
-  .step-num {
-    background: var(--school);
-    color: #fff;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.72rem;
-    font-weight: 800;
-    flex-shrink: 0;
-    margin-top: 1px;
+  /* ===== MEDIA VIEWER ===== */
+  .media-viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+  .media-viewer.open { opacity: 1; pointer-events: all; }
+  .media-viewer img, .media-viewer video { max-width: 95vw; max-height: 90vh; border-radius: 12px; }
+  .viewer-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }
+
+  /* ===== TOGGLE ===== */
+  .toggle-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
+  .toggle-label input { accent-color: var(--primary); width: 18px; height: 18px; }
+
+  /* ===== MONTH NAV ===== */
+  .month-nav { display: flex; align-items: center; justify-content: center; gap: 16px; background: var(--card); border-radius: var(--radius); padding: 10px 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .month-nav button { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--primary); padding: 4px 8px; }
+  .month-nav button:hover { transform: scale(1.2); }
+  .month-label { font-weight: 800; font-size: 1rem; min-width: 100px; text-align: center; }
+
+  @media(max-width: 400px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .tab-btn { padding: 8px 12px; font-size: 0.78rem; }
   }
 </style>
 </head>
 <body>
 
 <!-- Login Screen -->
-<div id="login-screen" style="position:fixed;inset:0;background:linear-gradient(180deg,#c9e8ff,#e8f7ff,#d4f0c0);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px">
-  <div style="background:#fff;border-radius:24px;padding:32px;width:100%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.15);text-align:center">
-    <div style="font-size:3rem;margin-bottom:8px">⭐</div>
-    <h2 style="margin-bottom:24px;font-weight:900;color:var(--text)">小星星作业本</h2>
+<div id="login-screen">
+  <div>
+    <div class="logo-big">⭐</div>
+    <h2>小星星作业本</h2>
     
     <div id="login-form">
       <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:16px">请选择角色登录</p>
-      <div style="display:flex;gap:10px;margin-bottom:16px">
-        <button class="btn btn-school" style="flex:1" onclick="showLogin('parent')">👨‍👩‍👧 家长/老师</button>
-        <button class="btn btn-extra" style="flex:1" onclick="showLogin('child')">👶 孩子</button>
-      </div>
+      <button class="role-btn parent" onclick="showLogin('parent')">👨‍👩‍👧 家长/老师</button>
+      <button class="role-btn child" onclick="showLogin('child')">👶 孩子</button>
     </div>
     
     <div id="password-form" style="display:none">
       <p id="role-label" style="font-size:0.85rem;color:var(--text-light);margin-bottom:12px"></p>
-      <input type="password" id="login-password" class="input-field" placeholder="请输入密码" style="margin-bottom:12px">
-      <button class="btn btn-school" style="width:100%" onclick="doLogin()">登录</button>
-      <button class="btn btn-white" style="width:100%;margin-top:8px" onclick="backToRole()">返回</button>
-      <p id="login-error" style="color:#ff6b6b;font-size:0.8rem;margin-top:12px;display:none">密码错误</p>
+      <input type="password" id="login-password" placeholder="请输入密码" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none">
+      <button onclick="doLogin()" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;margin-top:12px;cursor:pointer">登录</button>
+      <button onclick="backToRole()" style="background:none;border:none;color:var(--text-light);margin-top:10px;cursor:pointer;font-size:0.85rem">返回</button>
+      <p id="login-error" style="color:var(--danger);font-size:0.85rem;margin-top:10px;display:none">密码错误</p>
     </div>
     
     <div id="setup-form" style="display:none">
       <p style="font-size:0.85rem;color:var(--text-light);margin-bottom:12px">首次使用，请设置家长密码</p>
-      <input type="password" id="setup-password" class="input-field" placeholder="设置密码（4-6位）" style="margin-bottom:12px">
-      <input type="password" id="setup-password2" class="input-field" placeholder="确认密码" style="margin-bottom:16px">
-      <button class="btn btn-school" style="width:100%" onclick="doSetup()">确认设置</button>
-      <p id="setup-error" style="color:#ff6b6b;font-size:0.8rem;margin-top:12px;display:none"></p>
+      <input type="password" id="setup-password" placeholder="设置密码（4-6位）" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:10px">
+      <input type="password" id="setup-password2" placeholder="确认密码" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:16px">
+      <button onclick="doSetup()" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">确认设置</button>
+      <p id="setup-error" style="color:var(--danger);font-size:0.85rem;margin-top:10px;display:none"></p>
     </div>
   </div>
-</div>
-
-<!-- Cloud background -->
-<div class="cloud-layer">
-  <div class="cloud"></div>
-  <div class="cloud"></div>
-  <div class="cloud"></div>
 </div>
 
 <!-- Header -->
 <header>
   <div class="header-inner">
-    <div class="logo">
-      <span>⭐</span> 小星星作业本
-    </div>
+    <div class="logo"><span>⭐</span> 作业本</div>
     <div class="header-actions">
-      <button class="btn btn-white" onclick="openModal('school')">🏫 加学校作业</button>
-      <button class="btn btn-white" onclick="openModal('extra')">🎨 加课外班</button>
-      <button class="btn btn-white btn-sm" onclick="logout()" title="切换账号">🚪</button>
+      <button class="btn btn-white" onclick="openModal('school')">🏫 加作业</button>
+      <button class="btn btn-white btn-sm" onclick="logout()">🚪</button>
     </div>
   </div>
 </header>
 
 <!-- Navigation tabs -->
 <div class="nav-tabs">
-  <button class="tab-btn active" onclick="switchTab('today')">📋 今日作业</button>
-  <button class="tab-btn" onclick="switchTab('all')">📚 全部作业</button>
-  <button class="tab-btn" onclick="switchTab('checkin')">📅 打卡记录</button>
-  <button class="tab-btn" onclick="switchTab('sync')">📤 备份同步</button>
+  <button class="tab-btn active" onclick="switchTab('today')">📋 今日</button>
+  <button class="tab-btn" onclick="switchTab('all')">📚 全部</button>
+  <button class="tab-btn" onclick="switchTab('checkin')">📅 日历</button>
+  <button class="tab-btn" onclick="switchTab('sync')">⚙️ 设置</button>
 </div>
 
 <main>
 
   <!-- TODAY panel -->
   <div id="panel-today" class="panel active">
-    <div class="date-selector" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center">
-      <button class="btn btn-school btn-sm" id="btn-yesterday" onclick="selectDate('yesterday')">📅 昨日</button>
-      <button class="btn btn-school btn-sm active" id="btn-today" onclick="selectDate('today')">📋 今日</button>
-      <input type="date" id="date-picker" class="input-field" style="width:auto;padding:6px 12px" onchange="selectDate('custom')">
-      <span id="current-date-label" style="font-weight:800;font-size:1rem;margin-left:8px"></span>
+    <div class="date-nav">
+      <button onclick="navigateDate(-1)">‹</button>
+      <div class="date-display">
+        <div class="date-label" id="current-date-label">今日作业</div>
+        <div class="date-week" id="current-date-week"></div>
+      </div>
+      <div class="date-nav-right">
+        <button onclick="navigateDate(1)">›</button>
+        <input type="date" id="date-picker" onchange="selectCustomDate()">
+      </div>
     </div>
+    
     <div id="streak-area"></div>
     <div class="stats-row" id="today-stats"></div>
+    
     <div class="section-title">🏫 学校作业</div>
     <div class="hw-list" id="list-today-school"></div>
-    <div class="section-title" style="margin-top:24px">🎨 课外班作业</div>
+    
+    <div class="section-title" style="margin-top:20px">🎨 课外班</div>
     <div class="hw-list" id="list-today-extra"></div>
   </div>
 
   <!-- ALL panel -->
   <div id="panel-all" class="panel">
-    <div class="cat-toggle">
-      <button class="cat-btn cat-school active" id="cat-school-btn" onclick="filterCat('school')">🏫 学校作业</button>
-      <button class="cat-btn cat-extra" id="cat-extra-btn" onclick="filterCat('extra')">🎨 课外班作业</button>
-    </div>
+    <div class="section-title">📚 全部作业</div>
     <div class="hw-list" id="list-all"></div>
   </div>
 
   <!-- CHECK-IN panel -->
   <div id="panel-checkin" class="panel">
-    <div class="checkin-header">
-      <div class="month-nav">
-        <button onclick="prevMonth()">‹</button>
-        <span class="month-label" id="month-label"></span>
-        <button onclick="nextMonth()">›</button>
-      </div>
+    <div class="month-nav">
+      <button onclick="prevMonth()">‹</button>
+      <span class="month-label" id="month-label"></span>
+      <button onclick="nextMonth()">›</button>
     </div>
     <div class="calendar-grid" id="calendar"></div>
     <div class="day-detail" id="day-detail"></div>
-    <div class="stats-row" id="month-stats"></div>
   </div>
 
   <!-- SYNC panel -->
   <div id="panel-sync" class="panel">
-
-    <!-- 备份导出主卡片 -->
-    <div class="backup-hero">
-      <div class="backup-hero-icon">💾</div>
-      <div class="backup-hero-info">
-        <h3>作业数据备份</h3>
-        <p>包含所有作业任务、打卡记录、上传的图片和视频</p>
-      </div>
-      <button class="btn-backup-export" onclick="exportToFolder()">📤 导出备份</button>
+    <div class="card">
+      <h3>📤 导出备份</h3>
+      <p>包含所有作业、打卡记录和上传的文件</p>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="exportToFolder()">📥 导出 JSON</button>
     </div>
-
-    <!-- 备份文件夹设置 -->
-    <div class="gist-box">
-      <h3>📁 备份存储位置</h3>
-      <p style="font-size:0.83rem;color:var(--text-light);margin-bottom:12px">
-        设定一个固定的备份文件夹，每次导出时文件名带日期，方便整理。建议选一个已加入 OB 库或群晖同步的文件夹。
-      </p>
-      <div class="form-group" style="margin-bottom:10px">
-        <label class="field-label">📂 备份文件夹名称（仅作提示）
-          <span id="folder-saved-badge" class="saved-badge" style="display:none">已保存</span>
-        </label>
-        <div style="display:flex;gap:8px">
-          <input class="input-field" id="backup-folder" placeholder="如：OB库/作业本备份" style="flex:1" />
-          <button class="btn btn-school btn-sm" onclick="saveBackupFolder()">💾 保存</button>
-        </div>
-        <p style="font-size:0.72rem;color:var(--text-light);margin-top:5px">
-          💡 导出时浏览器弹出保存对话框，手动选择这个文件夹，之后浏览器会记住上次位置
-        </p>
-      </div>
-
-      <!-- 上次备份信息 -->
-      <div id="last-backup-info" style="display:none;background:#f0f7ff;border-radius:10px;padding:10px 14px;font-size:0.82rem;color:var(--school-deep)">
-        <span id="last-backup-text"></span>
-      </div>
-    </div>
-
-    <!-- 导入恢复 -->
-    <div class="gist-box">
-      <h3>📥 从备份文件恢复</h3>
-      <p style="font-size:0.83rem;color:var(--text-light);margin-bottom:12px">
-        换设备、或需要恢复数据时，选择之前导出的 <code class="code-tag">作业本备份_日期.json</code> 文件。<br>
-        数据会智能合并，不会覆盖现有内容。
-      </p>
-      <button class="btn btn-school" onclick="document.getElementById('restore-file').click()">
-        📂 选择备份文件导入
-      </button>
+    <div class="card">
+      <h3>📥 导入恢复</h3>
+      <p>从备份文件恢复数据</p>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="document.getElementById('restore-file').click()">📂 选择文件</button>
       <input type="file" id="restore-file" accept=".json" style="display:none" onchange="importBackup(event)">
-      <div id="restore-result" style="display:none;margin-top:10px;padding:10px 14px;border-radius:10px;font-size:0.84rem;font-weight:600"></div>
     </div>
-
-    <!-- 使用说明 -->
-    <div class="gist-box" style="background:linear-gradient(135deg,#f8f9ff,#f0f7ff)">
-      <h3>📖 推荐工作流</h3>
-      <div class="setup-steps">
-        <div class="setup-step">
-          <span class="step-num" style="background:var(--school)">1</span>
-          <span><strong>电脑上</strong>用作业本管理任务、记录打卡</span>
-        </div>
-        <div class="setup-step">
-          <span class="step-num" style="background:var(--extra)">2</span>
-          <span><strong>孩子拍作业照片</strong> → 手机 Synology Photos 自动备份到群晖相册</span>
-        </div>
-        <div class="setup-step">
-          <span class="step-num" style="background:var(--grass)">3</span>
-          <span><strong>定期点「导出备份」</strong>→ 保存到 OB 库或群晖文件夹 → 自动同步到所有设备</span>
-        </div>
-        <div class="setup-step">
-          <span class="step-num" style="background:var(--sun-deep)">4</span>
-          <span><strong>换设备时</strong>打开备份文件导入，数据立刻恢复</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Gist 同步（老师发布作业用，折叠） -->
-    <div class="gist-box">
-      <div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleGistPanel()">
-        <h3 style="margin:0">🐙 Gist 老师发布作业
-          <span id="auto-sync-badge" style="display:none;font-size:0.7rem;background:var(--grass);color:#fff;padding:2px 8px;border-radius:10px;margin-left:6px">自动同步中</span>
-        </h3>
-        <span id="gist-panel-arrow" style="font-size:1.2rem;transition:transform 0.2s">▼</span>
-      </div>
-      <div id="gist-panel-body" style="display:none;margin-top:14px">
-        <p style="font-size:0.82rem;color:var(--text-light);margin-bottom:12px">老师把作业发布到 GitHub Gist，孩子这边一键拉取导入。</p>
-        
-        <!-- 自动同步设置 -->
-        <div style="background:#f8fff8;border-radius:12px;padding:12px;margin-bottom:14px">
-          <div style="display:flex;align-items:center;gap:10px">
-            <label class="toggle-label" style="font-size:0.9rem">
-              <input type="checkbox" id="auto-sync-toggle" onchange="toggleAutoSync()">
-              <span>🔄 自动同步（每分钟拉取老师作业）</span>
-            </label>
-          </div>
-          <div id="auto-sync-status" style="display:none;font-size:0.75rem;color:var(--grass-deep);margin-top:8px"></div>
-        </div>
-        
-        <div class="form-group" style="margin-bottom:10px">
-          <label class="field-label">🔗 Gist ID
-            <span id="gist-id-saved-badge" class="saved-badge" style="display:none">已保存</span>
-          </label>
-          <div style="display:flex;gap:8px">
-            <input class="input-field" id="gist-id" placeholder="粘贴 Gist ID" style="flex:1" />
-            <button class="btn btn-school btn-sm" onclick="saveGistId()">💾</button>
-            <button class="btn btn-danger btn-sm" onclick="clearGistId()">✕</button>
-          </div>
-          <p style="font-size:0.72rem;color:var(--text-light);margin-top:4px"><a href="https://gist.github.com" target="_blank" style="color:var(--school)">新建 Gist →</a> 文件名 <code class="code-tag">homework.json</code>，内容 <code class="code-tag">[]</code></p>
-        </div>
-        <div class="form-group" style="margin-bottom:12px">
-          <label class="field-label">🔑 GitHub Token
-            <span id="gist-token-saved-badge" class="saved-badge" style="display:none">已保存</span>
-          </label>
-          <div style="display:flex;gap:8px">
-            <input class="input-field" id="gist-token" type="password" placeholder="ghp_xxxxxx..." style="flex:1" />
-            <button class="btn btn-white btn-sm" onclick="saveGistToken()">💾</button>
-            <button class="btn btn-danger btn-sm" onclick="clearGistToken()">✕</button>
-          </div>
-          <p style="font-size:0.72rem;color:var(--text-light);margin-top:4px">只需 <code class="code-tag">gist</code> 权限 · <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--school)">获取 →</a></p>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-school btn-sm" onclick="gistPullAndShow()">⬇️ 拉取老师的作业</button>
-          <button class="btn btn-extra btn-sm" onclick="gistPushAndShow()">⬆️ 推送任务到Gist</button>
-        </div>
-        <div class="sync-status" id="sync-status" style="margin-top:8px"></div>
-      </div>
-    </div>
-
-    <!-- 数据管理 -->
-    <div class="gist-box">
+    <div class="card">
       <h3>🗑️ 数据管理</h3>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-danger" onclick="clearAllData()">清除所有数据</button>
-      </div>
+      <p style="color:var(--danger)">清除所有数据，无法恢复！</p>
+      <button class="btn btn-danger" style="margin-top:12px" onclick="clearAllData()">清除全部</button>
     </div>
   </div>
 
@@ -1391,100 +526,48 @@
 
 <!-- Add homework modal -->
 <div class="modal-overlay" id="add-modal" onclick="closeModalOnBg(event)">
-  <div class="modal" style="max-width:560px;max-height:92vh;overflow-y:auto">
+  <div class="modal">
     <h3 id="modal-title">➕ 添加作业</h3>
-
-    <!-- AI Quick Fill -->
-    <div class="ai-section" id="ai-section">
-      <div class="ai-header">
-        <span class="ai-badge">✨ AI</span>
-        <span style="font-weight:700;font-size:0.95rem">智能批量识别</span>
-        <span style="font-size:0.78rem;color:var(--text-light);margin-left:6px">可一次输入多科作业</span>
-      </div>
-
-      <!-- Type selector chips -->
-      <div class="ai-type-chips">
-        <button class="type-chip school active" id="chip-school" onclick="selectChip('school')">🏫 默认学校作业</button>
-        <button class="type-chip extra" id="chip-extra" onclick="selectChip('extra')">🎨 默认课外班</button>
-      </div>
-
-      <div class="ai-input-wrap">
-        <textarea id="ai-prompt" class="ai-textarea" placeholder="一次可输入多科，例如：&#10;数学练习册12-15页，明天交&#10;语文背第3课课文，周五&#10;钢琴练习曲第5首背谱，下周一&#10;英语单词抄写Unit4，后天" rows="4"></textarea>
-        <button class="ai-go-btn" id="ai-go-btn" onclick="aiFill()">
-          <span id="ai-btn-text">✨ 解析</span>
-          <span id="ai-spinner" style="display:none">⏳</span>
-        </button>
-      </div>
-      <div id="ai-error" class="ai-error" style="display:none"></div>
-
-      <!-- API Key input -->
-      <div class="ai-key-row">
-        <input type="password" id="ai-api-key" class="input-field" placeholder="DeepSeek API Key（sk-...）" style="font-size:0.8rem;padding:8px 12px">
-        <button class="btn btn-white btn-sm" onclick="saveApiKey()" style="white-space:nowrap;font-size:0.78rem">💾 保存</button>
-      </div>
-      <p style="font-size:0.72rem;color:var(--text-light);margin-top:4px">DeepSeek Key 仅存储在本地浏览器，不会上传 · <a href="https://platform.deepseek.com/api_keys" target="_blank" style="color:var(--school)">获取Key →</a></p>
-
-      <!-- Batch preview area -->
-      <div id="ai-preview-area" style="display:none;margin-top:12px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-          <span style="font-weight:800;font-size:0.9rem">📋 识别结果 <span id="ai-preview-count" style="color:var(--school)"></span></span>
-          <div style="display:flex;gap:6px">
-            <button class="btn btn-school btn-sm" onclick="saveAllParsed()">✅ 全部保存</button>
-            <button class="btn btn-white btn-sm" onclick="clearPreview()">✕ 清空</button>
-          </div>
-        </div>
-        <div id="ai-preview-list"></div>
-      </div>
-
-      <div class="ai-divider"><span>或手动填写</span></div>
-    </div>
-
-    <!-- Manual form -->
     <div class="form-group">
       <label>作业类型</label>
-      <select id="form-type" onchange="syncChipFromSelect()">
+      <select id="form-type">
         <option value="school">🏫 学校作业</option>
-        <option value="extra">🎨 课外班作业</option>
+        <option value="extra">🎨 课外班</option>
       </select>
     </div>
     <div class="form-group">
-      <label>科目 / 课程名</label>
-      <input type="text" id="form-subject" class="input-field" placeholder="如：数学、英语、钢琴..." style="width:100%">
+      <label>科目 / 课程</label>
+      <input type="text" id="form-subject" placeholder="如：数学、英语、钢琴">
     </div>
     <div class="form-group">
-      <label>作业标题 *</label>
-      <input type="text" id="form-title" class="input-field" placeholder="简短描述作业内容..." style="width:100%">
+      <label>作业内容 *</label>
+      <input type="text" id="form-title" placeholder="简短描述作业内容">
     </div>
     <div class="form-group">
       <label>详细说明</label>
-      <textarea id="form-desc" class="input-field" rows="2" placeholder="详细要求、页码等..."></textarea>
+      <textarea id="form-desc" rows="2" placeholder="详细要求、页码等..."></textarea>
     </div>
     <div class="form-group">
       <label>截止日期</label>
-      <input type="date" id="form-due" class="input-field" style="width:100%">
+      <input type="date" id="form-due">
     </div>
     <div class="modal-actions">
-      <button class="btn btn-school" style="flex:1" onclick="saveHomework()">✅ 保存</button>
-      <button class="btn btn-white" style="flex:1" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveHomework()">✅ 保存</button>
+      <button class="btn btn-white" onclick="closeModal()">取消</button>
     </div>
   </div>
 </div>
 
 <!-- Media viewer -->
-<div class="media-viewer" id="media-viewer" onclick="closeViewerBg(event)">
-  <div class="viewer-filename" id="viewer-filename"></div>
+<div class="media-viewer" id="media-viewer" onclick="closeViewer()">
   <button class="viewer-close" onclick="closeViewer()">✕</button>
   <div id="viewer-content"></div>
-  <div class="viewer-toolbar">
-    <button class="viewer-btn dl" onclick="downloadCurrent()">⬇️ 下载文件</button>
-    <button class="viewer-btn" onclick="closeViewer()">✕ 关闭</button>
-  </div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Hidden file input for uploads -->
+<!-- Hidden file input -->
 <input type="file" id="hw-file-input" accept="image/*,video/*" multiple style="display:none" onchange="handleFileUpload(event)">
 
 <script>
@@ -1653,28 +736,32 @@ function switchTab(tab) {
 let currentViewDate = today(); // 当前查看的日期
 
 // ====== DATE SELECTOR ======
-function selectDate(type) {
-  const picker = document.getElementById('date-picker');
-  let dateStr;
-  
-  document.querySelectorAll('.date-selector .btn').forEach(b => b.classList.remove('active'));
-  
-  if (type === 'yesterday') {
-    const d = new Date();
-    d.setDate(d.getDate() - 1);
-    dateStr = d.toISOString().slice(0, 10);
-    document.getElementById('btn-yesterday').classList.add('active');
-    picker.value = dateStr;
-  } else if (type === 'today') {
-    dateStr = today();
-    document.getElementById('btn-today').classList.add('active');
-    picker.value = dateStr;
-  } else {
-    dateStr = picker.value;
-  }
-  
-  currentViewDate = dateStr;
+function navigateDate(delta) {
+  const d = new Date(currentViewDate);
+  d.setDate(d.getDate() + delta);
+  currentViewDate = d.toISOString().slice(0, 10);
+  document.getElementById('date-picker').value = currentViewDate;
+  updateDateDisplay();
   renderToday();
+}
+
+function selectCustomDate() {
+  currentViewDate = document.getElementById('date-picker').value;
+  updateDateDisplay();
+  renderToday();
+}
+
+function updateDateDisplay() {
+  const d = new Date(currentViewDate + 'T00:00:00');
+  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const week = weekDays[d.getDay()];
+  
+  if (currentViewDate === today()) {
+    document.getElementById('current-date-label').textContent = '今日作业';
+  } else {
+    document.getElementById('current-date-label').textContent = `${d.getMonth()+1}月${d.getDate()}日`;
+  }
+  document.getElementById('current-date-week').textContent = week;
 }
 
 function getDateLabel(dateStr) {
@@ -1683,22 +770,22 @@ function getDateLabel(dateStr) {
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   if (dateStr === yesterday.toISOString().slice(0, 10)) return '昨日作业';
-  return `${d.getMonth()+1}月${d.getDate()}日 作业`;
+  return `${d.getMonth()+1}月${d.getDate()}日`;
 }
 
 // ====== RENDER ======
 function renderToday() {
   const viewDate = currentViewDate;
-  document.getElementById('current-date-label').textContent = getDateLabel(viewDate);
+  updateDateDisplay();
   
   const isToday = viewDate === today();
   const checkin = DB.checkins[viewDate] || {};
   
-  // 过滤作业：截止日期 <= 查看日期，且（查看今日时只显示未完成的）
-  let hws = DB.homeworks.filter(h => !h.deleted && (!h.dueDate || h.dueDate <= viewDate));
+  // 过滤作业：今日只看当天的，过往日期看当天的
+  let hws = DB.homeworks.filter(h => !h.deleted && h.dueDate === viewDate);
   
   if (isToday) {
-    // 今日：只显示未完成的作业
+    // 今日：只显示未完成的
     hws = hws.filter(h => !checkin[h.id]);
   }
   
@@ -1709,7 +796,7 @@ function renderToday() {
   renderList('list-today-extra', extraHws, viewDate);
 
   // Stats - 统计当日所有作业（包括已完成的）
-  const allHws = DB.homeworks.filter(h => !h.deleted && (!h.dueDate || h.dueDate <= viewDate));
+  const allHws = DB.homeworks.filter(h => !h.deleted && h.dueDate === viewDate);
   const doneCount = allHws.filter(h => checkin[h.id]).length;
   const total = allHws.length;
 
