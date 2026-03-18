@@ -406,6 +406,27 @@
     .stats-row { grid-template-columns: repeat(2, 1fr); }
     .tab-btn { padding: 8px 12px; font-size: 0.78rem; }
   }
+  
+  /* ===== AI ===== */
+  .ai-box { background: linear-gradient(135deg, #f0f7ff, #fdf0ff); border: 2px solid #e0eeff; border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
+  .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .ai-badge { background: linear-gradient(135deg, var(--primary), #9B59B6); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 20px; }
+  .ai-textarea { width: 100%; border: 2px solid #d0e4ff; border-radius: var(--radius-sm); padding: 12px; font-family: inherit; font-size: 0.9rem; outline: none; resize: none; background: #fff; line-height: 1.5; }
+  .ai-textarea:focus { border-color: var(--primary); }
+  .ai-key-input { flex: 1; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.85rem; }
+  .ai-error { background: rgba(225,112,85,0.1); color: var(--danger); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.85rem; margin-top: 10px; }
+  .ai-preview { margin-top: 12px; }
+  .ai-card { background: #fff; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px; }
+  .ai-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .ai-card-type { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
+  .ai-card-type.school { background: rgba(108,92,231,0.1); color: var(--primary); }
+  .ai-card-type.extra { background: rgba(0,206,201,0.1); color: var(--accent); }
+  .ai-card-subject { font-size: 0.75rem; color: var(--text-muted); }
+  .ai-card-title { font-size: 0.9rem; font-weight: 700; }
+  .ai-card-due { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+  .ai-card-actions { display: flex; gap: 8px; margin-top: 10px; }
+  .ai-card .edit-btn { background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
+  .ai-card .del-btn { background: none; color: var(--danger); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -520,6 +541,25 @@
       <p style="color:var(--danger)">清除所有数据，无法恢复！</p>
       <button class="btn btn-danger" style="margin-top:12px" onclick="clearAllData()">清除全部</button>
     </div>
+    
+    <div class="card">
+      <h3>🐙 Gist 同步</h3>
+      <div class="form-group">
+        <label>Gist ID</label>
+        <input type="text" id="gist-id" placeholder="粘贴 Gist ID" onchange="setGistId(this.value)">
+      </div>
+      <div class="form-group">
+        <label>GitHub Token</label>
+        <input type="password" id="gist-token" placeholder="ghp_xxxx..." onchange="setGistToken(this.value)">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary" style="flex:1" onclick="gistPull()">⬇️ 拉取</button>
+        <button class="btn btn-primary" style="flex:1" onclick="gistPush()">⬆️ 推送</button>
+      </div>
+      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">
+        Token 仅需 gist 权限 · <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--primary)">获取</a>
+      </p>
+    </div>
   </div>
 
 </main>
@@ -528,28 +568,48 @@
 <div class="modal-overlay" id="add-modal" onclick="closeModalOnBg(event)">
   <div class="modal">
     <h3 id="modal-title">➕ 添加作业</h3>
-    <div class="form-group">
-      <label>作业类型</label>
-      <select id="form-type">
-        <option value="school">🏫 学校作业</option>
-        <option value="extra">🎨 课外班</option>
-      </select>
+    
+    <!-- AI 识别区域 -->
+    <div class="ai-box">
+      <div class="ai-header">
+        <span class="ai-badge">✨ AI</span>
+        <span style="font-size:0.85rem;font-weight:700">智能识别作业</span>
+      </div>
+      <div class="ai-input-wrap">
+        <textarea id="ai-prompt" class="ai-textarea" placeholder="输入作业内容，如：&#10;数学练习册12-15页，明天交&#10;语文背第3课课文，周五&#10;钢琴练习曲第5首背谱" rows="3"></textarea>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input type="password" id="ai-api-key" class="ai-key-input" placeholder="DeepSeek API Key">
+        <button class="btn btn-primary btn-sm" onclick="aiFillHomework()">✨ 识别</button>
+      </div>
+      <div id="ai-error" class="ai-error" style="display:none"></div>
+      <div id="ai-preview" class="ai-preview" style="display:none"></div>
     </div>
-    <div class="form-group">
-      <label>科目 / 课程</label>
-      <input type="text" id="form-subject" placeholder="如：数学、英语、钢琴">
-    </div>
-    <div class="form-group">
-      <label>作业内容 *</label>
-      <input type="text" id="form-title" placeholder="简短描述作业内容">
-    </div>
-    <div class="form-group">
-      <label>详细说明</label>
-      <textarea id="form-desc" rows="2" placeholder="详细要求、页码等..."></textarea>
-    </div>
-    <div class="form-group">
-      <label>截止日期</label>
-      <input type="date" id="form-due">
+    
+    <div style="border-top:1px solid var(--border);margin:16px 0;padding-top:16px">
+      <div class="form-group">
+        <label>作业类型</label>
+        <select id="form-type">
+          <option value="school">🏫 学校作业</option>
+          <option value="extra">🎨 课外班</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>科目 / 课程</label>
+        <input type="text" id="form-subject" placeholder="如：数学、英语、钢琴">
+      </div>
+      <div class="form-group">
+        <label>作业内容 *</label>
+        <input type="text" id="form-title" placeholder="简短描述作业内容">
+      </div>
+      <div class="form-group">
+        <label>详细说明</label>
+        <textarea id="form-desc" rows="2" placeholder="详细要求、页码等..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>截止日期</label>
+        <input type="date" id="form-due">
+      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" onclick="saveHomework()">✅ 保存</button>
@@ -1045,23 +1105,18 @@ function showDayDetail(ds) {
 
 // ====== MODAL ======
 function openModal(type) {
-  selectedChipType = type || 'school';
-  selectChip(selectedChipType);
-  document.getElementById('form-type').value = selectedChipType;
+  editingId = null;
+  document.getElementById('form-type').value = type || 'school';
   document.getElementById('form-title').value = '';
   document.getElementById('form-subject').value = '';
   document.getElementById('form-desc').value = '';
-  document.getElementById('form-due').value = '';
-  document.getElementById('ai-prompt').value = '';
-  hideAiError();
-  loadApiKey();
-  document.getElementById('modal-title').textContent = type==='extra' ? '🎨 添加课外班作业' : '🏫 添加学校作业';
+  document.getElementById('form-due').value = currentViewDate;
+  document.getElementById('modal-title').textContent = type==='extra' ? '🎨 添加课外班' : '🏫 添加学校作业';
   document.getElementById('add-modal').classList.add('open');
 }
 
 function closeModal() {
   document.getElementById('add-modal').classList.remove('open');
-  clearPreview();
   editingId = null;
 }
 function closeModalOnBg(e) { if (e.target === document.getElementById('add-modal')) closeModal(); }
@@ -1078,6 +1133,237 @@ function editHw(id) {
   document.getElementById('form-due').value = hw.dueDate || '';
   document.getElementById('modal-title').textContent = '✏️ 编辑作业';
   document.getElementById('add-modal').classList.add('open');
+}
+
+// ====== AI ======
+const API_KEY_STORAGE = 'homework_ai_key';
+
+function getAiKey() {
+  return localStorage.getItem(API_KEY_STORAGE) || '';
+}
+
+function setAiKey(key) {
+  localStorage.setItem(API_KEY_STORAGE, key);
+}
+
+async function aiFillHomework() {
+  const prompt = document.getElementById('ai-prompt').value.trim();
+  if (!prompt) { showAiError('请输入作业内容'); return; }
+  
+  const apiKey = document.getElementById('ai-api-key').value.trim() || getAiKey();
+  if (!apiKey) { showAiError('请输入 DeepSeek API Key'); return; }
+  
+  setAiKey(apiKey);
+  
+  const btn = document.querySelector('button[onclick="aiFillHomework()"]');
+  btn.disabled = true;
+  btn.textContent = '⏳ 识别中...';
+  
+  try {
+    const response = await fetch('https://api.deepseek.com/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [{
+          role: 'user',
+          content: `你是一个作业整理助手。请将用户输入的作业信息整理成 JSON 数组格式。每条作业包含：
+- title: 作业标题（必填）
+- subject: 科目/课程名
+- type: 类型，"school"表示学校作业，"extra"表示课外班
+- dueDate: 截止日期，格式 YYYY-MM-DD
+
+分析截止日期时：
+- "明天" = 明天
+- "后天" = 后天
+- "周五" 等 = 最近的周五
+- 今天是 ${new Date().toISOString().slice(0,10)}
+
+只返回 JSON 数组，不要其他内容。
+用户输入：
+${prompt}`
+        }]
+      })
+    });
+    
+    if (!response.ok) throw new Error('API 请求失败');
+    
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    
+    let jsonStr = content.match(/\[[\s\S]*\]/);
+    if (!jsonStr) throw new Error('无法解析结果');
+    
+    const items = JSON.parse(jsonStr[0]);
+    showAiPreview(items);
+    hideAiError();
+  } catch (e) {
+    showAiError(e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '✨ 识别';
+  }
+}
+
+function showAiError(msg) {
+  const el = document.getElementById('ai-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideAiError() {
+  document.getElementById('ai-error').style.display = 'none';
+}
+
+let aiParsedItems = [];
+
+function showAiPreview(items) {
+  aiParsedItems = items;
+  const container = document.getElementById('ai-preview');
+  
+  if (!items.length) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.innerHTML = `
+    <div style="margin-bottom:8px;font-weight:700;font-size:0.9rem">识别结果（${items.length} 条）：</div>
+    ${items.map((item, i) => `
+      <div class="ai-card" id="ai-card-${i}">
+        <div class="ai-card-header">
+          <span class="ai-card-type ${item.type || 'school'}">${item.type === 'extra' ? '🎨 课外班' : '🏫 学校'}</span>
+          ${item.subject ? `<span class="ai-card-subject">${item.subject}</span>` : ''}
+        </div>
+        <div class="ai-card-title">${item.title}</div>
+        ${item.dueDate ? `<div class="ai-card-due">📅 截止：${item.dueDate}</div>` : ''}
+        <div class="ai-card-actions">
+          <button class="edit-btn" onclick="editAiItem(${i})">📝 编辑</button>
+          <button class="del-btn" onclick="deleteAiItem(${i})">🗑️ 删除</button>
+        </div>
+      </div>
+    `).join('')}
+    <div style="margin-top:12px;display:flex;gap:8px">
+      <button class="btn btn-primary" style="flex:1" onclick="saveAllAiItems()">✅ 全部保存</button>
+      <button class="btn btn-white" style="flex:1" onclick="clearAiPreview()">清空</button>
+    </div>
+  `;
+  container.style.display = 'block';
+}
+
+function editAiItem(index) {
+  const item = aiParsedItems[index];
+  document.getElementById('form-type').value = item.type || 'school';
+  document.getElementById('form-title').value = item.title;
+  document.getElementById('form-subject').value = item.subject || '';
+  document.getElementById('form-due').value = item.dueDate || currentViewDate;
+  document.getElementById('form-desc').value = item.desc || '';
+  
+  // 填充到表单后删除该项
+  aiParsedItems.splice(index, 1);
+  showAiPreview(aiParsedItems);
+}
+
+function deleteAiItem(index) {
+  aiParsedItems.splice(index, 1);
+  showAiPreview(aiParsedItems);
+}
+
+function saveAllAiItems() {
+  if (!aiParsedItems.length) return;
+  
+  aiParsedItems.forEach(item => {
+    DB.homeworks.push({
+      id: genId(),
+      type: item.type || 'school',
+      title: item.title,
+      subject: item.subject || '',
+      desc: item.desc || '',
+      dueDate: item.dueDate || currentViewDate,
+      createdAt: today()
+    });
+  });
+  
+  saveData(DB);
+  renderToday();
+  closeModal();
+  clearAiPreview();
+  toast(`✅ 已保存 ${aiParsedItems.length} 条作业`);
+}
+
+function clearAiPreview() {
+  aiParsedItems = [];
+  document.getElementById('ai-preview').style.display = 'none';
+  document.getElementById('ai-prompt').value = '';
+}
+
+// ====== GIST ======
+const GIST_ID_KEY = 'homework_gist_id';
+const GIST_TOKEN_KEY = 'homework_gist_token';
+
+function getGistId() { return localStorage.getItem(GIST_ID_KEY) || ''; }
+function getGistToken() { return localStorage.getItem(GIST_TOKEN_KEY) || ''; }
+function setGistId(id) { localStorage.setItem(GIST_ID_KEY, id); }
+function setGistToken(token) { localStorage.setItem(GIST_TOKEN_KEY, token); }
+
+async function gistPush() {
+  const id = getGistId(), token = getGistToken();
+  if (!token) { toast('⚠️ 请先配置 GitHub Token'); return; }
+  if (!id) { toast('⚠️ 请先配置 Gist ID'); return; }
+  
+  try {
+    const hws = DB.homeworks.filter(h => !h.deleted).map(h => ({
+      id: h.id, title: h.title, type: h.type, subject: h.subject, desc: h.desc, dueDate: h.dueDate
+    }));
+    
+    const res = await fetch(`https://api.github.com/gists/${id}`, {
+      method: 'PATCH',
+      headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ files: { 'homework.json': { content: JSON.stringify(hws, null, 2) } } })
+    });
+    
+    if (!res.ok) throw new Error('推送失败');
+    toast(`✅ 已推送 ${hws.length} 条到 Gist`);
+  } catch (e) {
+    toast('❌ ' + e.message);
+  }
+}
+
+async function gistPull() {
+  const id = getGistId();
+  if (!id) { toast('⚠️ 请先配置 Gist ID'); return; }
+  
+  try {
+    const headers = { 'Accept': 'application/vnd.github.v3+json' };
+    const token = getGistToken();
+    if (token) headers['Authorization'] = `token ${token}`;
+    
+    const res = await fetch(`https://api.github.com/gists/${id}`, { headers });
+    if (!res.ok) throw new Error('拉取失败');
+    
+    const data = await res.json();
+    const file = data.files['homework.json'];
+    if (!file) throw new Error('未找到 homework.json');
+    
+    const imported = JSON.parse(file.content);
+    let added = 0;
+    imported.forEach(item => {
+      if (!item.title) return;
+      const exists = DB.homeworks.find(h => h.id === item.id || (!h.deleted && h.title === item.title));
+      if (!exists) {
+        DB.homeworks.push({ id: item.id || genId(), type: item.type||'school', title: item.title, subject: item.subject||'', desc: item.desc||'', dueDate: item.dueDate||'' });
+        added++;
+      }
+    });
+    
+    saveData(DB);
+    renderToday();
+    toast(`🔄 拉取成功 +${added} 条`);
+  } catch (e) {
+    toast('❌ ' + e.message);
+  }
 }
 
 function saveHomework() {
@@ -1852,27 +2138,6 @@ function hideAiError() {
 }
 
 // ====== INIT ======
-function init() {
-  const local = loadFromLocal();
-  DB = local;
-  document.getElementById('date-picker').value = today();
-  renderToday();
-  document.getElementById('form-due').value = today();
-  loadGistAutoSyncSettings();
-  initLogin();
-  
-  // 注册 Service Worker 实现 PWA
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('SW 注册成功'))
-      .catch(err => console.log('SW 注册失败', err));
-  }
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeModal(); closeViewer(); }
-});
-
-init();
 // ====== LOGIN SYSTEM ======
 const ROLE_KEY = 'homework_role';
 const PWD_KEY = 'homework_password';
@@ -1939,35 +2204,17 @@ function doSetup() {
 function applyRolePermissions() {
   const isParent = currentRole === 'parent';
   
-  // 隐藏/显示添加按钮
   document.querySelectorAll('.header-actions').forEach(el => {
     el.style.display = isParent ? 'flex' : 'none';
   });
   
-  // 隐藏/显示删除按钮
   document.querySelectorAll('.hw-actions .btn-danger').forEach(el => {
     el.style.display = isParent ? 'inline-flex' : 'none';
   });
   
-  // 隐藏/显示编辑按钮
-  document.querySelectorAll('.hw-actions .btn-white').forEach(el => {
-    if (el.textContent.includes('编辑')) {
-      el.style.display = isParent ? 'inline-flex' : 'none';
-    }
-  });
-  
-  // 隐藏打卡记录和备份同步（孩子看不到）
   const tabBtns = document.querySelectorAll('.tab-btn');
-  if (tabBtns[2]) tabBtns[2].style.display = isParent ? '' : 'none'; // 打卡
-  if (tabBtns[3]) tabBtns[3].style.display = isParent ? '' : 'none'; // 备份
-  
-  // 更新 logo 显示角色
-  const logo = document.querySelector('.logo');
-  if (logo) {
-    logo.innerHTML = isParent 
-      ? '<span>⭐</span> 小星星作业本'
-      : '<span>⭐</span> 小星星作业本 <span style="font-size:0.8rem;color:#ff6b6b">👶</span>';
-  }
+  if (tabBtns[2]) tabBtns[2].style.display = isParent ? '' : 'none';
+  if (tabBtns[3]) tabBtns[3].style.display = isParent ? '' : 'none';
 }
 
 function initLogin() {
@@ -1976,10 +2223,8 @@ function initLogin() {
     document.getElementById('setup-form').style.display = 'block';
   } else {
     currentRole = localStorage.getItem(ROLE_KEY) || 'parent';
-    if (currentRole) {
-      document.getElementById('login-screen').style.display = 'none';
-      applyRolePermissions();
-    }
+    document.getElementById('login-screen').style.display = 'none';
+    applyRolePermissions();
   }
 }
 
@@ -1987,6 +2232,21 @@ function logout() {
   localStorage.removeItem(ROLE_KEY);
   location.reload();
 }
+
+function init() {
+  const local = loadFromLocal();
+  DB = local;
+  document.getElementById('date-picker').value = today();
+  renderToday();
+  document.getElementById('form-due').value = today();
+  initLogin();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeViewer(); }
+});
+
+init();
 </script>
 </body>
 </html>
