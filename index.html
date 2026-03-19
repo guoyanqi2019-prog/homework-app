@@ -437,19 +437,17 @@
     <div class="logo-big">⭐</div>
     <h2>小星星作业本</h2>
     
-    <!-- Step 1: Choose Role -->
-    <div id="login-form">
+    <div id="login-step1">
       <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:16px">请选择身份</p>
-      <button class="role-btn parent" id="btn-parent">👨‍👩‍👧 家长/老师</button>
-      <button class="role-btn child" id="btn-child">👶 孩子</button>
+      <button class="role-btn parent" onclick="window.__selectRole('parent')">👨‍👩‍👧 家长/老师</button>
+      <button class="role-btn child" onclick="window.__selectRole('child')">👶 孩子</button>
     </div>
     
-    <!-- Step 2: Enter Password -->
-    <div id="password-form" style="display:none">
+    <div id="login-step2" style="display:none">
       <p id="role-label" style="font-size:0.9rem;font-weight:700;color:var(--primary);margin-bottom:12px"></p>
       <input type="password" id="login-password" placeholder="请输入密码" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:12px">
-      <button id="btn-login" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">登录</button>
-      <button id="btn-back" style="background:none;border:none;color:var(--text-light);margin-top:10px;cursor:pointer;font-size:0.85rem">← 返回选择身份</button>
+      <button onclick="window.__doLogin()" style="width:100%;padding:14px;border:none;border-radius:10px;background:var(--primary);color:#fff;font-size:1rem;font-weight:700;cursor:pointer">登录</button>
+      <button onclick="window.__backToRole()" style="background:none;border:none;color:var(--text-light);margin-top:10px;cursor:pointer;font-size:0.85rem">← 返回选择身份</button>
       <p id="login-error" style="color:var(--danger);font-size:0.85rem;margin-top:10px;display:none"></p>
     </div>
   </div>
@@ -2148,12 +2146,40 @@ function checkPassword(pwd) {
 
 function selectRole(role) {
   loginRole = role;
-  document.getElementById('login-form').style.display = 'none';
-  document.getElementById('password-form').style.display = 'block';
+  document.getElementById('login-step1').style.display = 'none';
+  document.getElementById('login-step2').style.display = 'block';
   document.getElementById('role-label').textContent = role === 'parent' ? '👨‍👩‍👧 家长/老师' : '👶 孩子';
   document.getElementById('login-password').value = '';
   document.getElementById('login-error').style.display = 'none';
 }
+
+function backToRole() {
+  document.getElementById('login-step1').style.display = 'block';
+  document.getElementById('login-step2').style.display = 'none';
+}
+
+function doLogin() {
+  var pwd = document.getElementById('login-password').value;
+  if (!pwd) {
+    document.getElementById('login-error').textContent = '请输入密码';
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  if (checkPassword(pwd)) {
+    localStorage.setItem(ROLE_KEY, loginRole);
+    currentRole = loginRole;
+    document.getElementById('login-screen').style.display = 'none';
+    applyRolePermissions();
+  } else {
+    document.getElementById('login-error').textContent = '密码错误';
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+// 暴露到 window
+window.__selectRole = selectRole;
+window.__doLogin = doLogin;
+window.__backToRole = backToRole;
 
 function backToRole() {
   document.getElementById('login-form').style.display = 'block';
@@ -2162,8 +2188,8 @@ function backToRole() {
 
 function initLogin() {
   document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-form').style.display = 'block';
-  document.getElementById('password-form').style.display = 'none';
+  document.getElementById('login-step1').style.display = 'block';
+  document.getElementById('login-step2').style.display = 'none';
 }
 
 function doLogin() {
@@ -2257,25 +2283,12 @@ function logout() {
 }
 
 function init() {
-  const local = loadFromLocal();
+  var local = loadFromLocal();
   DB = local;
   document.getElementById('date-picker').value = today();
   renderToday();
   document.getElementById('form-due').value = today();
   initLogin();
-  
-  // 绑定登录按钮事件
-  var btnParent = document.getElementById('btn-parent');
-  var btnChild = document.getElementById('btn-child');
-  var btnLogin = document.getElementById('btn-login');
-  var btnBack = document.getElementById('btn-back');
-  var pwdInput = document.getElementById('login-password');
-  
-  if (btnParent) btnParent.onclick = function() { selectRole('parent'); };
-  if (btnChild) btnChild.onclick = function() { selectRole('child'); };
-  if (btnLogin) btnLogin.onclick = doLogin;
-  if (btnBack) btnBack.onclick = backToRole;
-  if (pwdInput) pwdInput.onkeypress = function(e) { if (e.key === 'Enter') doLogin(); };
 }
 
 document.addEventListener('keydown', function(e) {
