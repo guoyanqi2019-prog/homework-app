@@ -2250,7 +2250,6 @@ function doSetup() {
   document.getElementById('login-screen').style.display = 'none';
   applyRolePermissions();
 }
-}
 
 function logout() {
   localStorage.removeItem(ROLE_KEY);
@@ -2266,18 +2265,20 @@ function init() {
   initLogin();
   
   // 绑定登录按钮事件
-  document.getElementById('btn-parent').addEventListener('click', () => selectRole('parent'));
-  document.getElementById('btn-child').addEventListener('click', () => selectRole('child'));
-  document.getElementById('btn-login').addEventListener('click', doLogin);
-  document.getElementById('btn-back').addEventListener('click', backToRole);
+  var btnParent = document.getElementById('btn-parent');
+  var btnChild = document.getElementById('btn-child');
+  var btnLogin = document.getElementById('btn-login');
+  var btnBack = document.getElementById('btn-back');
+  var pwdInput = document.getElementById('login-password');
   
-  // 回车登录
-  document.getElementById('login-password').addEventListener('keypress', e => {
-    if (e.key === 'Enter') doLogin();
-  });
+  if (btnParent) btnParent.onclick = function() { selectRole('parent'); };
+  if (btnChild) btnChild.onclick = function() { selectRole('child'); };
+  if (btnLogin) btnLogin.onclick = doLogin;
+  if (btnBack) btnBack.onclick = backToRole;
+  if (pwdInput) pwdInput.onkeypress = function(e) { if (e.key === 'Enter') doLogin(); };
 }
 
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeViewer(); }
 });
 
