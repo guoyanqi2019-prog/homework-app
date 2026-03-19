@@ -9,14 +9,22 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5fa; min-height: 100vh; color: #333; }
 
-header { background: linear-gradient(135deg, #6C5CE7, #A29BFE); padding: 16px 20px; color: white; position: sticky; top: 0; z-index: 100; }
+header { background: linear-gradient(135deg, #6C5CE7, #A29BFE); padding: 16px 20px; color: white; position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; }
+header .left { display: flex; flex-direction: column; }
 header h1 { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
 header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
+header .settings { background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
 
 .date-bar { background: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
 .date-bar .date { font-weight: 700; color: #6C5CE7; }
 .date-bar .nav { display: flex; gap: 8px; }
 .date-bar button { background: #6C5CE7; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
+
+.sync-bar { background: #f0f7ff; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: #6C5CE7; border-bottom: 1px solid #e0eeff; }
+.sync-bar .status { display: flex; align-items: center; gap: 6px; }
+.sync-bar .dot { width: 8px; height: 8px; border-radius: 50%; background: #ccc; }
+.sync-bar .dot.active { background: #00B894; }
+.sync-bar button { background: #6C5CE7; color: white; border: none; padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; cursor: pointer; }
 
 .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px 20px; }
 .stats .card { background: white; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
@@ -53,13 +61,20 @@ header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
 .modal-content h2 { font-size: 1.2rem; margin-bottom: 20px; text-align: center; }
 .modal-content .form { margin-bottom: 16px; }
 .modal-content label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; }
-.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; }
-.modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { border-color: #6C5CE7; }
-.modal-content textarea { resize: none; height: 80px; }
+.modal-content input, .modal-content select { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; }
+.modal-content input:focus { border-color: #6C5CE7; }
 .modal-content .btn-row { display: flex; gap: 12px; margin-top: 20px; }
 .modal-content button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; }
 .modal-content .btn-cancel { background: #eee; color: #666; }
 .modal-content .btn-save { background: #6C5CE7; color: white; }
+.modal-content .btn-danger { background: #ff6b6b; color: white; }
+.modal-content .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
+.modal-content .toggle-row:last-child { border-bottom: none; }
+.modal-content .toggle { width: 50px; height: 28px; border-radius: 14px; background: #ddd; position: relative; cursor: pointer; transition: all 0.2s; }
+.modal-content .toggle.active { background: #00B894; }
+.modal-content .toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: all 0.2s; }
+.modal-content .toggle.active::after { left: 24px; }
+.modal-content .info-text { font-size: 0.8rem; color: #888; margin-top: 8px; line-height: 1.5; }
 
 .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 24px; border-radius: 50px; font-size: 0.9rem; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 300; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -68,9 +83,20 @@ header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
 <body>
 
 <header>
-  <h1>⭐ 作业本</h1>
-  <p id="dateStr"></p>
+  <div class="left">
+    <h1>⭐ 作业本</h1>
+    <p id="dateStr"></p>
+  </div>
+  <button class="settings" onclick="openSettings()">⚙️</button>
 </header>
+
+<div class="sync-bar">
+  <div class="status">
+    <div class="dot" id="syncDot"></div>
+    <span id="syncStatus">未同步</span>
+  </div>
+  <button onclick="syncNow()">🔄 同步</button>
+</div>
 
 <div class="date-bar">
   <span class="date" id="viewDateLabel">今日</span>
@@ -135,11 +161,45 @@ header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
   </div>
 </div>
 
+<!-- Settings Modal -->
+<div class="modal" id="settingsModal">
+  <div class="modal-content">
+    <h2>⚙️ 同步设置</h2>
+    
+    <div class="toggle-row">
+      <span>自动同步</span>
+      <div class="toggle" id="autoSyncToggle" onclick="toggleAutoSync()"></div>
+    </div>
+    
+    <div class="form" style="margin-top: 20px;">
+      <label>Gist ID</label>
+      <input type="text" id="gistId" placeholder="粘贴 Gist ID">
+    </div>
+    
+    <div class="form">
+      <label>GitHub Token</label>
+      <input type="password" id="gistToken" placeholder="ghp_xxxx...">
+    </div>
+    
+    <p class="info-text">Token 只需 gist 权限。<a href="https://github.com/settings/tokens" target="_blank" style="color:#6C5CE7">获取 Token →</a><br>
+    老师创建一个 Gist，学生配置后自动同步作业。</p>
+    
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeSettings()">关闭</button>
+      <button class="btn-save" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
 var DB_KEY = 'homework_db_v1';
+var GIST_ID_KEY = 'hw_gist_id';
+var GIST_TOKEN_KEY = 'hw_gist_token';
+var AUTO_SYNC_KEY = 'hw_auto_sync';
 var viewDate = today();
+var autoSyncTimer = null;
 
 function today() { return new Date().toISOString().slice(0,10); }
 
@@ -148,7 +208,13 @@ function load() {
   catch (e) { return { homeworks: [], checkins: {} }; }
 }
 
-function save(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
+function save(data) { 
+  localStorage.setItem(DB_KEY, JSON.stringify(data));
+  gistPush();
+}
+
+function getGistId() { return localStorage.getItem(GIST_ID_KEY) || ''; }
+function getGistToken() { return localStorage.getItem(GIST_TOKEN_KEY) || ''; }
 
 function navigateDay(delta) {
   var d = new Date(viewDate);
@@ -167,7 +233,6 @@ function getDateLabel(ds) {
 
 function render() {
   var db = load();
-  var todayStr = today();
   
   document.getElementById('dateStr').textContent = new Date().toLocaleDateString('zh-CN', {weekday:'long', month:'long', day:'numeric'});
   document.getElementById('viewDateLabel').textContent = getDateLabel(viewDate);
@@ -213,6 +278,7 @@ function toggleCheck(id) {
   }
   save(db);
   render();
+  gistPush();
 }
 
 function delHw(id) {
@@ -256,6 +322,134 @@ function saveHw() {
   toast('已保存');
 }
 
+function openSettings() {
+  document.getElementById('gistId').value = getGistId();
+  document.getElementById('gistToken').value = getGistToken();
+  var autoSync = localStorage.getItem(AUTO_SYNC_KEY) === 'true';
+  document.getElementById('autoSyncToggle').className = 'toggle' + (autoSync ? ' active' : '');
+  document.getElementById('settingsModal').classList.add('open');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('open');
+}
+
+function toggleAutoSync() {
+  var toggle = document.getElementById('autoSyncToggle');
+  var isActive = toggle.classList.contains('active');
+  toggle.classList.toggle('active');
+  localStorage.setItem(AUTO_SYNC_KEY, !isActive);
+  
+  if (!isActive) {
+    startAutoSync();
+  } else {
+    stopAutoSync();
+  }
+}
+
+function saveSettings() {
+  localStorage.setItem(GIST_ID_KEY, document.getElementById('gistId').value.trim());
+  localStorage.setItem(GIST_TOKEN_KEY, document.getElementById('gistToken').value.trim());
+  closeSettings();
+  toast('设置已保存');
+  
+  if (localStorage.getItem(AUTO_SYNC_KEY) === 'true') {
+    startAutoSync();
+  }
+  syncNow();
+}
+
+function startAutoSync() {
+  if (autoSyncTimer) clearInterval(autoSyncTimer);
+  autoSyncTimer = setInterval(syncNow, 60000);
+  document.getElementById('syncDot').classList.add('active');
+  document.getElementById('syncStatus').textContent = '自动同步中';
+}
+
+function stopAutoSync() {
+  if (autoSyncTimer) {
+    clearInterval(autoSyncTimer);
+    autoSyncTimer = null;
+  }
+}
+
+async function syncNow() {
+  var gistId = getGistId();
+  var token = getGistToken();
+  
+  if (!gistId || !token) {
+    document.getElementById('syncStatus').textContent = '未配置';
+    return;
+  }
+  
+  document.getElementById('syncStatus').textContent = '同步中...';
+  
+  try {
+    var res = await fetch('https://api.github.com/gists/' + gistId, {
+      headers: { 'Authorization': 'token ' + token }
+    });
+    
+    if (!res.ok) throw new Error('获取失败');
+    
+    var data = await res.json();
+    var file = data.files && data.files['homework.json'];
+    
+    if (file) {
+      var remote = JSON.parse(file.content);
+      var db = load();
+      
+      remote.forEach(function(r) {
+        if (!r.id) return;
+        var exists = db.homeworks.find(function(h) { return h.id === r.id; });
+        if (!exists) {
+          db.homeworks.push(r);
+        } else {
+          Object.assign(exists, r);
+        }
+      });
+      
+      save(db);
+      render();
+    }
+    
+    await gistPush();
+    
+    document.getElementById('syncDot').classList.add('active');
+    document.getElementById('syncStatus').textContent = '已同步';
+  } catch (e) {
+    document.getElementById('syncStatus').textContent = '同步失败';
+    console.error(e);
+  }
+}
+
+async function gistPush() {
+  var gistId = getGistId();
+  var token = getGistToken();
+  
+  if (!gistId || !token) return;
+  
+  try {
+    var db = load();
+    var hws = db.homeworks.filter(function(h) { return !h.deleted; });
+    var content = JSON.stringify({ homeworks: hws, checkins: db.checkins }, null, 2);
+    
+    await fetch('https://api.github.com/gists/' + gistId, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        files: {
+          'homework.json': { content: content }
+        }
+      })
+    });
+  } catch (e) {
+    console.error('Push failed:', e);
+  }
+}
+
 function toast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg;
@@ -267,7 +461,16 @@ document.getElementById('addModal').addEventListener('click', function(e) {
   if (e.target === this) closeAdd();
 });
 
+document.getElementById('settingsModal').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
 render();
+
+if (localStorage.getItem(AUTO_SYNC_KEY) === 'true' && getGistId()) {
+  startAutoSync();
+  syncNow();
+}
 </script>
 </body>
 </html>
