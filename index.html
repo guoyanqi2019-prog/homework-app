@@ -431,35 +431,12 @@
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="login-screen">
-  <div>
-    <div class="logo-big">⭐</div>
-    <h2>小星星作业本</h2>
-    
-    <div id="login-step1">
-      <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:16px">请选择身份</p>
-      <button class="role-btn parent" id="btn-parent">👨‍👩‍👧 家长/老师</button>
-      <button class="role-btn child" id="btn-child">👶 孩子</button>
-    </div>
-    
-    <div id="login-step2" style="display:none">
-      <p id="role-label" style="font-size:0.9rem;font-weight:700;color:var(--primary);margin-bottom:12px"></p>
-      <input type="password" id="login-password" placeholder="请输入密码" style="width:100%;padding:14px 16px;border:2px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin-bottom:12px">
-      <button id="btn-login">登录</button>
-      <button id="btn-back">← 返回</button>
-      <p id="login-error"></p>
-    </div>
-  </div>
-</div>
-
 <!-- Header -->
 <header>
   <div class="header-inner">
     <div class="logo"><span>⭐</span> 作业本</div>
     <div class="header-actions">
       <button class="btn btn-white" onclick="openModal('school')">🏫 加作业</button>
-      <button class="btn btn-white btn-sm" onclick="logout()">🚪</button>
     </div>
   </div>
 </header>
@@ -2112,173 +2089,12 @@ function hideAiError() {
   document.getElementById('ai-error').style.display = 'none';
 }
 
-// ====== INIT ======
-// ====== LOGIN SYSTEM ======
-const ROLE_KEY = 'homework_role';
-const PWD_KEY = 'homework_password';
-let currentRole = null;
-let loginRole = null;
-
-function hasPassword() {
-  return localStorage.getItem(PWD_KEY) !== null;
-}
-
-function checkPassword(pwd) {
-  return localStorage.getItem(PWD_KEY) === pwd;
-}
-
-function selectRole(role) {
-  loginRole = role;
-  document.getElementById('login-step1').style.display = 'none';
-  document.getElementById('login-step2').style.display = 'block';
-  document.getElementById('role-label').textContent = role === 'parent' ? '👨‍👩‍👧 家长/老师' : '👶 孩子';
-  document.getElementById('login-password').value = '';
-  document.getElementById('login-error').style.display = 'none';
-}
-
-function backToRole() {
-  document.getElementById('login-step1').style.display = 'block';
-  document.getElementById('login-step2').style.display = 'none';
-}
-
-function doLogin() {
-  var pwd = document.getElementById('login-password').value;
-  if (!pwd) {
-    document.getElementById('login-error').textContent = '请输入密码';
-    document.getElementById('login-error').style.display = 'block';
-    return;
-  }
-  if (checkPassword(pwd)) {
-    localStorage.setItem(ROLE_KEY, loginRole);
-    currentRole = loginRole;
-    document.getElementById('login-screen').style.display = 'none';
-    applyRolePermissions();
-  } else {
-    document.getElementById('login-error').textContent = '密码错误';
-    document.getElementById('login-error').style.display = 'block';
-  }
-}
-
-// 暴露到 window
-window.__selectRole = selectRole;
-window.__doLogin = doLogin;
-window.__backToRole = backToRole;
-
-function backToRole() {
-  document.getElementById('login-form').style.display = 'block';
-  document.getElementById('password-form').style.display = 'none';
-}
-
-function initLogin() {
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-step1').style.display = 'block';
-  document.getElementById('login-step2').style.display = 'none';
-}
-
-function doLogin() {
-  const pwd = document.getElementById('login-password').value;
-  if (checkPassword(pwd)) {
-    localStorage.setItem(ROLE_KEY, loginRole);
-    currentRole = loginRole;
-    document.getElementById('login-screen').style.display = 'none';
-    applyRolePermissions();
-  } else {
-    document.getElementById('login-error').style.display = 'block';
-  }
-}
-
-function doSetup() {
-  const p1 = document.getElementById('setup-password').value;
-  const p2 = document.getElementById('setup-password2').value;
-  const errorEl = document.getElementById('setup-error');
-  
-  if (p1.length < 4 || p1.length > 6) {
-    errorEl.textContent = '密码需要4-6位';
-    errorEl.style.display = 'block';
-    return;
-  }
-  if (p1 !== p2) {
-    errorEl.textContent = '两次密码不一致';
-    errorEl.style.display = 'block';
-    return;
-  }
-  
-  localStorage.setItem(PWD_KEY, p1);
-  localStorage.setItem(ROLE_KEY, 'parent');
-  currentRole = 'parent';
-  document.getElementById('login-screen').style.display = 'none';
-  applyRolePermissions();
-}
-
-function applyRolePermissions() {
-  const isParent = currentRole === 'parent';
-  
-  document.querySelectorAll('.header-actions').forEach(el => {
-    el.style.display = isParent ? 'flex' : 'none';
-  });
-  
-  document.querySelectorAll('.hw-actions .btn-danger').forEach(el => {
-    el.style.display = isParent ? 'inline-flex' : 'none';
-  });
-  
-  const tabBtns = document.querySelectorAll('.tab-btn');
-  if (tabBtns[2]) tabBtns[2].style.display = isParent ? '' : 'none';
-  if (tabBtns[3]) tabBtns[3].style.display = isParent ? '' : 'none';
-}
-
-function initLogin() {
-  // 总是显示登录界面
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('login-form').style.display = 'block';
-  document.getElementById('setup-form').style.display = 'none';
-  document.getElementById('password-form').style.display = 'none';
-}
-
-function doLogin() {
-  const pwd = document.getElementById('login-password').value;
-  if (!pwd) { document.getElementById('login-error').textContent = '请输入密码'; document.getElementById('login-error').style.display = 'block'; return; }
-  if (checkPassword(pwd)) {
-    localStorage.setItem(ROLE_KEY, loginRole);
-    currentRole = loginRole;
-    document.getElementById('login-screen').style.display = 'none';
-    applyRolePermissions();
-  } else {
-    document.getElementById('login-error').textContent = '密码错误';
-    document.getElementById('login-error').style.display = 'block';
-  }
-}
-
-function doSetup() {
-  const p1 = document.getElementById('setup-password').value;
-  const p2 = document.getElementById('setup-password2').value;
-  if (!p1 || p1.length < 4) { document.getElementById('setup-error').textContent = '密码至少4位'; document.getElementById('setup-error').style.display = 'block'; return; }
-  if (p1 !== p2) { document.getElementById('setup-error').textContent = '两次密码不一致'; document.getElementById('setup-error').style.display = 'block'; return; }
-  localStorage.setItem(PWD_KEY, p1);
-  localStorage.setItem(ROLE_KEY, 'parent');
-  currentRole = 'parent';
-  document.getElementById('login-screen').style.display = 'none';
-  applyRolePermissions();
-}
-
-function logout() {
-  localStorage.removeItem(ROLE_KEY);
-  location.reload();
-}
-
 function init() {
   var local = loadFromLocal();
   DB = local;
   document.getElementById('date-picker').value = today();
   renderToday();
   document.getElementById('form-due').value = today();
-  initLogin();
-  
-  // 登录按钮事件绑定
-  document.getElementById('btn-parent').onclick = function() { selectRole('parent'); };
-  document.getElementById('btn-child').onclick = function() { selectRole('child'); };
-  document.getElementById('btn-login').onclick = doLogin;
-  document.getElementById('btn-back').onclick = backToRole;
-  document.getElementById('login-password').onkeypress = function(e) { if (e.key === 'Enter') doLogin(); };
 }
 
 document.addEventListener('keydown', function(e) {
