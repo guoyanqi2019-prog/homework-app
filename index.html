@@ -2,2106 +2,272 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#6C5CE7">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="小星星作业本">
-<title>小星星作业本 ⭐</title>
-<link rel="manifest" href="manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<title>⭐ 作业本</title>
 <style>
-  :root {
-    --primary: #6C5CE7;
-    --primary-light: #A29BFE;
-    --primary-dark: #5B4BC4;
-    --accent: #00CEC9;
-    --accent-light: #81ECEC;
-    --warning: #FDCB6E;
-    --success: #00B894;
-    --danger: #E17055;
-    --bg: #F8F9FD;
-    --card: #FFFFFF;
-    --text: #2D3436;
-    --text-light: #636E72;
-    --text-muted: #B2BEC3;
-    --border: #DFE6E9;
-    --shadow: 0 4px 20px rgba(108, 92, 231, 0.12);
-    --shadow-hover: 0 8px 32px rgba(108, 92, 231, 0.2);
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5fa; min-height: 100vh; color: #333; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+header { background: linear-gradient(135deg, #6C5CE7, #A29BFE); padding: 16px 20px; color: white; position: sticky; top: 0; z-index: 100; }
+header h1 { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+header p { font-size: 0.85rem; opacity: 0.9; margin-top: 4px; }
 
-  body {
-    font-family: 'Nunito', 'Ma Shan Zheng', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    color: var(--text);
-    overflow-x: hidden;
-    padding-bottom: 80px;
-  }
+.date-bar { background: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+.date-bar .date { font-weight: 700; color: #6C5CE7; }
+.date-bar .nav { display: flex; gap: 8px; }
+.date-bar button { background: #6C5CE7; color: white; border: none; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; }
 
-  /* ===== LOGIN ===== */
-  #login-screen {
-    position: fixed;
-    inset: 0;
-    background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 50%, #81ECEC 100%);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  #login-screen > div {
-    background: var(--card);
-    border-radius: 28px;
-    padding: 40px 32px;
-    width: 100%;
-    max-width: 380px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-    text-align: center;
-  }
-  #login-screen .logo-big { font-size: 4rem; margin-bottom: 12px; }
-  #login-screen h2 { font-size: 1.6rem; font-weight: 900; color: var(--primary); margin-bottom: 28px; }
-  .role-btn {
-    width: 100%;
-    padding: 18px;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: all 0.2s;
-  }
-  .role-btn.parent { background: var(--primary); color: #fff; }
-  .role-btn.child { background: var(--accent); color: #fff; }
-  .role-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
-  #password-form input { width: 100%; padding: 14px 16px; border: 2px solid var(--border); border-radius: var(--radius-sm); font-size: 1rem; margin-bottom: 12px; outline: none; transition: border-color 0.2s; }
-  #password-form input:focus { border-color: var(--primary); }
-  #password-form button { width: 100%; padding: 14px; border: none; border-radius: var(--radius-sm); font-size: 1rem; font-weight: 700; cursor: pointer; background: var(--primary); color: #fff; }
-  #login-error { color: var(--danger); font-size: 0.85rem; margin-top: 10px; }
+.stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px 20px; }
+.stats .card { background: white; border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+.stats .num { font-size: 2rem; font-weight: 800; color: #6C5CE7; }
+.stats .label { font-size: 0.75rem; color: #888; margin-top: 4px; }
 
-  /* ===== HEADER ===== */
-  header {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    padding: 16px 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.25);
-  }
-  .header-inner {
-    max-width: 600px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .logo { display: flex; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 900; color: #fff; }
-  .logo span { font-size: 2rem; }
-  .header-actions { display: flex; gap: 8px; }
-  .btn {
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 700;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    font-size: 0.85rem;
-  }
-  .btn:hover { transform: translateY(-2px); }
-  .btn-white { background: #fff; color: var(--primary); }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-danger { background: var(--danger); color: #fff; }
-  .btn-sm { padding: 6px 12px; font-size: 0.8rem; }
+.list { padding: 0 20px 100px; }
+.list h3 { font-size: 0.9rem; color: #888; margin: 20px 0 12px; display: flex; align-items: center; gap: 6px; }
+.list h3::after { content: ''; flex: 1; height: 1px; background: #eee; }
 
-  /* ===== NAV ===== */
-  .nav-tabs {
-    background: var(--card);
-    display: flex;
-    justify-content: space-around;
-    padding: 12px 16px;
-    position: sticky;
-    top: 60px;
-    z-index: 99;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-    border-bottom: 1px solid var(--border);
-  }
-  .tab-btn {
-    background: none;
-    border: none;
-    padding: 10px 20px;
-    font-family: inherit;
-    font-weight: 700;
-    font-size: 0.85rem;
-    cursor: pointer;
-    color: var(--text-muted);
-    border-radius: var(--radius-sm);
-    transition: all 0.2s;
-  }
-  .tab-btn.active { background: var(--primary); color: #fff; }
-  .tab-btn:hover:not(.active) { background: rgba(108,92,231,0.1); color: var(--primary); }
+.hw-card { background: white; border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; align-items: flex-start; gap: 12px; }
+.hw-card.done { opacity: 0.6; }
+.hw-card .check { width: 32px; height: 32px; border-radius: 50%; border: 3px solid #ddd; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; transition: all 0.2s; }
+.hw-card .check.checked { background: #00B894; border-color: #00B894; color: white; }
+.hw-card .info { flex: 1; }
+.hw-card .title { font-weight: 600; font-size: 1rem; }
+.hw-card.done .title { text-decoration: line-through; color: #888; }
+.hw-card .meta { font-size: 0.8rem; color: #888; margin-top: 4px; }
+.hw-card .type { display: inline-block; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; margin-right: 6px; }
+.hw-card .type.school { background: rgba(108,92,231,0.1); color: #6C5CE7; }
+.hw-card .type.extra { background: rgba(0,206,201,0.1); color: #00B894; }
+.hw-card .del { background: none; border: none; color: #ff6b6b; font-size: 1.2rem; cursor: pointer; padding: 4px; }
 
-  /* ===== MAIN ===== */
-  main { max-width: 600px; margin: 0 auto; padding: 20px 16px; }
+.empty { text-align: center; padding: 60px 20px; color: #ccc; }
+.empty .icon { font-size: 4rem; margin-bottom: 12px; }
+.empty p { font-size: 0.9rem; }
 
-  /* ===== PANEL ===== */
-  .panel { display: none; }
-  .panel.active { display: block; animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.add-btn { position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #6C5CE7, #A29BFE); color: white; border: none; font-size: 2rem; box-shadow: 0 4px 20px rgba(108,92,231,0.4); cursor: pointer; z-index: 100; }
 
-  /* ===== DATE SELECTOR ===== */
-  .date-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    box-shadow: var(--shadow);
-  }
-  .date-nav button {
-    background: var(--primary);
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s;
-  }
-  .date-nav button:hover { background: var(--primary-dark); transform: scale(1.1); }
-  .date-display { text-align: center; }
-  .date-display .date-label { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-  .date-display .date-week { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
-  .date-nav input[type="date"] {
-    position: absolute;
-    opacity: 0;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-  }
-  .date-nav-right { position: relative; }
+.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: none; align-items: flex-end; justify-content: center; }
+.modal.open { display: flex; }
+.modal-content { background: white; width: 100%; max-height: 90vh; border-radius: 24px 24px 0 0; padding: 24px; overflow-y: auto; animation: slideUp 0.3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.modal-content h2 { font-size: 1.2rem; margin-bottom: 20px; text-align: center; }
+.modal-content .form { margin-bottom: 16px; }
+.modal-content label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 6px; }
+.modal-content input, .modal-content select, .modal-content textarea { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 1rem; outline: none; }
+.modal-content input:focus, .modal-content select:focus, .modal-content textarea:focus { border-color: #6C5CE7; }
+.modal-content textarea { resize: none; height: 80px; }
+.modal-content .btn-row { display: flex; gap: 12px; margin-top: 20px; }
+.modal-content button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+.modal-content .btn-cancel { background: #eee; color: #666; }
+.modal-content .btn-save { background: #6C5CE7; color: white; }
 
-  /* ===== STATS ===== */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  .stat-card {
-    background: var(--card);
-    border-radius: var(--radius-sm);
-    padding: 14px 8px;
-    text-align: center;
-    box-shadow: var(--shadow);
-  }
-  .stat-emoji { font-size: 1.4rem; }
-  .stat-value { font-size: 1.3rem; font-weight: 900; color: var(--primary); }
-  .stat-label { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
-
-  /* ===== HW LIST ===== */
-  .hw-list { display: flex; flex-direction: column; gap: 12px; }
-  
-  .section-title {
-    font-size: 1rem;
-    font-weight: 800;
-    color: var(--text);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::after { content: ''; flex: 1; height: 2px; background: var(--border); border-radius: 2px; }
-
-  /* ===== HW CARD ===== */
-  .hw-card {
-    background: var(--card);
-    border-radius: var(--radius);
-    padding: 16px;
-    box-shadow: var(--shadow);
-    border-left: 4px solid var(--primary);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-  }
-  .hw-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-  .hw-card.school { border-left-color: var(--primary); }
-  .hw-card.extra { border-left-color: var(--accent); }
-  .hw-card.completed { opacity: 0.6; background: #f8fff8; border-left-color: var(--success); }
-
-  .hw-card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-  .hw-check {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 3px solid var(--border);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    transition: all 0.2s;
-    flex-shrink: 0;
-  }
-  .hw-check.checked { background: var(--success); border-color: var(--success); color: #fff; }
-  .hw-check:hover { transform: scale(1.15); border-color: var(--primary); }
-  
-  .hw-info { flex: 1; }
-  .hw-subject { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin-bottom: 2px; }
-  .hw-title { font-size: 1rem; font-weight: 800; }
-  .hw-card.completed .hw-title { text-decoration: line-through; color: var(--text-muted); }
-  
-  .hw-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; font-size: 0.75rem; }
-  .hw-tag { padding: 3px 10px; border-radius: 20px; font-weight: 600; }
-  .hw-tag.due-today { background: rgba(253, 203, 110, 0.2); color: #E17055; }
-  .hw-tag.overdue { background: rgba(225, 112, 85, 0.2); color: var(--danger); }
-  .hw-tag.school { background: rgba(108, 92, 231, 0.1); color: var(--primary); }
-  .hw-tag.extra { background: rgba(0, 206, 201, 0.1); color: var(--accent); }
-
-  .hw-desc { font-size: 0.85rem; color: var(--text-light); margin: 8px 0; line-height: 1.5; }
-  
-  .hw-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
-
-  /* ===== EMPTY STATE ===== */
-  .empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--text-muted);
-  }
-  .empty-state .empty-icon { font-size: 3.5rem; margin-bottom: 12px; opacity: 0.5; }
-  .empty-state p { font-size: 0.95rem; }
-
-  /* ===== MEDIA ===== */
-  .media-grid { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
-  .media-thumb { position: relative; width: 70px; height: 70px; border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; }
-  .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .media-thumb video { width: 100%; height: 100%; object-fit: cover; }
-  .play-icon { position: absolute; inset: 0; background: rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-
-  /* ===== MODAL ===== */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 200;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s;
-  }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal {
-    background: var(--card);
-    border-radius: 24px 24px 0 0;
-    padding: 24px;
-    width: 100%;
-    max-width: 600px;
-    max-height: 90vh;
-    overflow-y: auto;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-  }
-  .modal-overlay.open .modal { transform: translateY(0); }
-  .modal h3 { font-size: 1.2rem; font-weight: 900; margin-bottom: 18px; color: var(--primary); }
-  .form-group { margin-bottom: 16px; }
-  .form-group label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-light); }
-  .form-group input, .form-group textarea, .form-group select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: inherit;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); }
-  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-  .modal-actions .btn { flex: 1; justify-content: center; padding: 14px; }
-
-  /* ===== TOAST ===== */
-  .toast {
-    position: fixed;
-    bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    background: var(--text);
-    color: #fff;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 0.9rem;
-    font-weight: 700;
-    z-index: 500;
-    opacity: 0;
-    transition: all 0.3s;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ===== SYNC ===== */
-  .card { background: var(--card); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
-  .card h3 { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); }
-  .card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
-
-  /* ===== CALENDAR ===== */
-  .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 20px; }
-  .cal-weekday { text-align: center; font-size: 0.72rem; font-weight: 700; color: var(--text-muted); padding: 6px 0; }
-  .cal-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
-  .cal-day:hover { transform: scale(1.1); }
-  .cal-day.today { border: 2px solid var(--primary); color: var(--primary); }
-  .cal-day.all-done { background: var(--success); color: #fff; }
-  .cal-day.partial { background: var(--warning); color: #fff; }
-  .cal-day.none-done { background: var(--danger); color: #fff; }
-  .cal-day.empty { cursor: default; }
-  .cal-day.future { opacity: 0.3; }
-
-  /* ===== STREAK ===== */
-  .streak-banner {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 16px;
-    color: #fff;
-  }
-  .streak-fire { font-size: 2.2rem; }
-  .streak-text h3 { font-size: 1rem; font-weight: 900; }
-  .streak-text p { font-size: 0.78rem; opacity: 0.85; }
-
-  /* ===== MEDIA VIEWER ===== */
-  .media-viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 300; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
-  .media-viewer.open { opacity: 1; pointer-events: all; }
-  .media-viewer img, .media-viewer video { max-width: 95vw; max-height: 90vh; border-radius: 12px; }
-  .viewer-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); border: none; color: #fff; font-size: 1.5rem; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; }
-
-  /* ===== TOGGLE ===== */
-  .toggle-label { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
-  .toggle-label input { accent-color: var(--primary); width: 18px; height: 18px; }
-
-  /* ===== MONTH NAV ===== */
-  .month-nav { display: flex; align-items: center; justify-content: center; gap: 16px; background: var(--card); border-radius: var(--radius); padding: 10px 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
-  .month-nav button { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--primary); padding: 4px 8px; }
-  .month-nav button:hover { transform: scale(1.2); }
-  .month-label { font-weight: 800; font-size: 1rem; min-width: 100px; text-align: center; }
-
-  @media(max-width: 400px) {
-    .stats-row { grid-template-columns: repeat(2, 1fr); }
-    .tab-btn { padding: 8px 12px; font-size: 0.78rem; }
-  }
-  
-  /* ===== AI ===== */
-  .ai-box { background: linear-gradient(135deg, #f0f7ff, #fdf0ff); border: 2px solid #e0eeff; border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
-  .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-  .ai-badge { background: linear-gradient(135deg, var(--primary), #9B59B6); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 20px; }
-  .ai-textarea { width: 100%; border: 2px solid #d0e4ff; border-radius: var(--radius-sm); padding: 12px; font-family: inherit; font-size: 0.9rem; outline: none; resize: none; background: #fff; line-height: 1.5; }
-  .ai-textarea:focus { border-color: var(--primary); }
-  .ai-key-input { flex: 1; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 0.85rem; }
-  .ai-error { background: rgba(225,112,85,0.1); color: var(--danger); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.85rem; margin-top: 10px; }
-  .ai-preview { margin-top: 12px; }
-  .ai-card { background: #fff; border: 2px solid var(--border); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 8px; }
-  .ai-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-  .ai-card-type { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; }
-  .ai-card-type.school { background: rgba(108,92,231,0.1); color: var(--primary); }
-  .ai-card-type.extra { background: rgba(0,206,201,0.1); color: var(--accent); }
-  .ai-card-subject { font-size: 0.75rem; color: var(--text-muted); }
-  .ai-card-title { font-size: 0.9rem; font-weight: 700; }
-  .ai-card-due { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
-  .ai-card-actions { display: flex; gap: 8px; margin-top: 10px; }
-  .ai-card .edit-btn { background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
-  .ai-card .del-btn { background: none; color: var(--danger); border: 1px solid var(--danger); border-radius: var(--radius-sm); padding: 6px 12px; font-size: 0.8rem; cursor: pointer; }
+.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: #333; color: white; padding: 12px 24px; border-radius: 50px; font-size: 0.9rem; opacity: 0; transition: all 0.3s; pointer-events: none; z-index: 300; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- Header -->
 <header>
-  <div class="header-inner">
-    <div class="logo"><span>⭐</span> 作业本</div>
-    <div class="header-actions">
-      <button class="btn btn-white" onclick="openModal('school')">🏫 加作业</button>
-    </div>
-  </div>
+  <h1>⭐ 作业本</h1>
+  <p id="dateStr"></p>
 </header>
 
-<!-- Navigation tabs -->
-<div class="nav-tabs">
-  <button class="tab-btn active" onclick="switchTab('today')">📋 今日</button>
-  <button class="tab-btn" onclick="switchTab('all')">📚 全部</button>
-  <button class="tab-btn" onclick="switchTab('checkin')">📅 日历</button>
-  <button class="tab-btn" onclick="switchTab('sync')">⚙️ 设置</button>
+<div class="date-bar">
+  <span class="date" id="viewDateLabel">今日</span>
+  <div class="nav">
+    <button onclick="navigateDay(-1)">‹</button>
+    <button onclick="navigateDay(1)">›</button>
+  </div>
 </div>
 
-<main>
-
-  <!-- TODAY panel -->
-  <div id="panel-today" class="panel active">
-    <div class="date-nav">
-      <button onclick="navigateDate(-1)">‹</button>
-      <div class="date-display">
-        <div class="date-label" id="current-date-label">今日作业</div>
-        <div class="date-week" id="current-date-week"></div>
-      </div>
-      <div class="date-nav-right">
-        <button onclick="navigateDate(1)">›</button>
-        <input type="date" id="date-picker" onchange="selectCustomDate()">
-      </div>
-    </div>
-    
-    <div id="streak-area"></div>
-    <div class="stats-row" id="today-stats"></div>
-    
-    <div class="section-title">🏫 学校作业</div>
-    <div class="hw-list" id="list-today-school"></div>
-    
-    <div class="section-title" style="margin-top:20px">🎨 课外班</div>
-    <div class="hw-list" id="list-today-extra"></div>
+<div class="stats">
+  <div class="card">
+    <div class="num" id="statTotal">0</div>
+    <div class="label">总作业</div>
   </div>
-
-  <!-- ALL panel -->
-  <div id="panel-all" class="panel">
-    <div class="section-title">📚 全部作业</div>
-    <div class="hw-list" id="list-all"></div>
+  <div class="card">
+    <div class="num" id="statDone">0</div>
+    <div class="label">已完成</div>
   </div>
-
-  <!-- CHECK-IN panel -->
-  <div id="panel-checkin" class="panel">
-    <div class="month-nav">
-      <button onclick="prevMonth()">‹</button>
-      <span class="month-label" id="month-label"></span>
-      <button onclick="nextMonth()">›</button>
-    </div>
-    <div class="calendar-grid" id="calendar"></div>
-    <div class="day-detail" id="day-detail"></div>
+  <div class="card">
+    <div class="num" id="statLeft">0</div>
+    <div class="label">待完成</div>
   </div>
+</div>
 
-  <!-- SYNC panel -->
-  <div id="panel-sync" class="panel">
-    <div class="card">
-      <h3>📤 导出备份</h3>
-      <p>包含所有作业、打卡记录和上传的文件</p>
-      <button class="btn btn-primary" style="margin-top:12px" onclick="exportToFolder()">📥 导出 JSON</button>
-    </div>
-    <div class="card">
-      <h3>📥 导入恢复</h3>
-      <p>从备份文件恢复数据</p>
-      <button class="btn btn-primary" style="margin-top:12px" onclick="document.getElementById('restore-file').click()">📂 选择文件</button>
-      <input type="file" id="restore-file" accept=".json" style="display:none" onchange="importBackup(event)">
-    </div>
-    <div class="card">
-      <h3>🗑️ 数据管理</h3>
-      <p style="color:var(--danger)">清除所有数据，无法恢复！</p>
-      <button class="btn btn-danger" style="margin-top:12px" onclick="clearAllData()">清除全部</button>
-    </div>
-    
-    <div class="card">
-      <h3>🐙 Gist 同步</h3>
-      <div class="form-group">
-        <label>Gist ID</label>
-        <input type="text" id="gist-id" placeholder="粘贴 Gist ID" onchange="setGistId(this.value)">
-      </div>
-      <div class="form-group">
-        <label>GitHub Token</label>
-        <input type="password" id="gist-token" placeholder="ghp_xxxx..." onchange="setGistToken(this.value)">
-      </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary" style="flex:1" onclick="gistPull()">⬇️ 拉取</button>
-        <button class="btn btn-primary" style="flex:1" onclick="gistPush()">⬆️ 推送</button>
-      </div>
-      <p style="font-size:0.75rem;color:var(--text-muted);margin-top:8px">
-        Token 仅需 gist 权限 · <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--primary)">获取</a>
-      </p>
-    </div>
-  </div>
+<div class="list">
+  <h3>🏫 学校作业</h3>
+  <div id="schoolList"></div>
+  
+  <h3>🎨 课外班</h3>
+  <div id="extraList"></div>
+</div>
 
-</main>
+<button class="add-btn" onclick="openAdd()">+</button>
 
-<!-- Add homework modal -->
-<div class="modal-overlay" id="add-modal" onclick="closeModalOnBg(event)">
-  <div class="modal">
-    <h3 id="modal-title">➕ 添加作业</h3>
-    
-    <!-- AI 识别区域 -->
-    <div class="ai-box">
-      <div class="ai-header">
-        <span class="ai-badge">✨ AI</span>
-        <span style="font-size:0.85rem;font-weight:700">智能识别作业</span>
-      </div>
-      <div class="ai-input-wrap">
-        <textarea id="ai-prompt" class="ai-textarea" placeholder="输入作业内容，如：&#10;数学练习册12-15页，明天交&#10;语文背第3课课文，周五&#10;钢琴练习曲第5首背谱" rows="3"></textarea>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <input type="password" id="ai-api-key" class="ai-key-input" placeholder="DeepSeek API Key">
-        <button class="btn btn-primary btn-sm" onclick="aiFillHomework()">✨ 识别</button>
-      </div>
-      <div id="ai-error" class="ai-error" style="display:none"></div>
-      <div id="ai-preview" class="ai-preview" style="display:none"></div>
+<!-- Add Modal -->
+<div class="modal" id="addModal">
+  <div class="modal-content">
+    <h2>➕ 添加作业</h2>
+    <div class="form">
+      <label>类型</label>
+      <select id="hwType">
+        <option value="school">🏫 学校作业</option>
+        <option value="extra">🎨 课外班</option>
+      </select>
     </div>
-    
-    <div style="border-top:1px solid var(--border);margin:16px 0;padding-top:16px">
-      <div class="form-group">
-        <label>作业类型</label>
-        <select id="form-type">
-          <option value="school">🏫 学校作业</option>
-          <option value="extra">🎨 课外班</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>科目 / 课程</label>
-        <input type="text" id="form-subject" placeholder="如：数学、英语、钢琴">
-      </div>
-      <div class="form-group">
-        <label>作业内容 *</label>
-        <input type="text" id="form-title" placeholder="简短描述作业内容">
-      </div>
-      <div class="form-group">
-        <label>详细说明</label>
-        <textarea id="form-desc" rows="2" placeholder="详细要求、页码等..."></textarea>
-      </div>
-      <div class="form-group">
-        <label>截止日期</label>
-        <input type="date" id="form-due">
-      </div>
+    <div class="form">
+      <label>科目/课程</label>
+      <input type="text" id="hwSubject" placeholder="如：数学、英语、钢琴">
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-primary" onclick="saveHomework()">✅ 保存</button>
-      <button class="btn btn-white" onclick="closeModal()">取消</button>
+    <div class="form">
+      <label>作业内容 *</label>
+      <input type="text" id="hwTitle" placeholder="简短描述作业">
+    </div>
+    <div class="form">
+      <label>截止日期</label>
+      <input type="date" id="hwDate">
+    </div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeAdd()">取消</button>
+      <button class="btn-save" onclick="saveHw()">保存</button>
     </div>
   </div>
 </div>
 
-<!-- Media viewer -->
-<div class="media-viewer" id="media-viewer" onclick="closeViewer()">
-  <button class="viewer-close" onclick="closeViewer()">✕</button>
-  <div id="viewer-content"></div>
-</div>
-
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Hidden file input -->
-<input type="file" id="hw-file-input" accept="image/*,video/*" multiple style="display:none" onchange="handleFileUpload(event)">
-
 <script>
-// ====== DATA LAYER ======
-// 双存储：OB Local REST API（主）+ localStorage（备份/离线）
-const STORAGE_KEY  = 'xiaoxingxing_hw_v2';
-const OB_API_KEY   = 'xiaoxingxing_ob_apikey';
-const OB_PORT_KEY  = 'xiaoxingxing_ob_port';
-const OB_PATH_KEY  = 'xiaoxingxing_ob_path';
-const DATA_FILENAME = 'homework-data.json';
+var DB_KEY = 'homework_db_v1';
+var viewDate = today();
 
-function getObApiKey() { return localStorage.getItem(OB_API_KEY) || ''; }
-function getObPort()   { return localStorage.getItem(OB_PORT_KEY) || '27123'; }
-function getObPath()   { return localStorage.getItem(OB_PATH_KEY) || '作业本'; }
-function getObFileUrl() {
-  const path = getObPath().replace(/\/$/, '');
-  return `http://127.0.0.1:${getObPort()}/vault/${encodeURIComponent(path)}/${DATA_FILENAME}`;
-}
-
-// ---- 从 OB 读取数据 ----
-async function loadFromOb() {
-  const key = getObApiKey();
-  if (!key) return null;
-  try {
-    const res = await fetch(getObFileUrl(), {
-      headers: { 'Authorization': `Bearer ${key}` }
-    });
-    if (res.status === 404) return { homeworks: [], checkins: {} }; // 新文件
-    if (!res.ok) return null;
-    return await res.json();
-  } catch(e) { return null; }
-}
-
-// ---- 写入 OB ----
-async function saveToOb(data) {
-  const key = getObApiKey();
-  if (!key) return false;
-  try {
-    const res = await fetch(getObFileUrl(), {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${key}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data, null, 2)
-    });
-    return res.ok;
-  } catch(e) { return false; }
-}
-
-// ---- localStorage 备份 ----
-function loadFromLocal() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : { homeworks: [], checkins: {} };
-  } catch(e) { return { homeworks: [], checkins: {} }; }
-}
-function saveToLocal(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-// ---- 统一 saveData ----
-async function saveData(data) {
-  saveToLocal(data);
-}
-
-// ---- 初始化加载（优先 OB，回退 localStorage）----
-let DB = { homeworks: [], checkins: {} };
-
-async function initData() {
-  const local = loadFromLocal();
-  DB = local; // 先用本地数据，避免白屏等待
-  renderToday();
-
-  if (!getObApiKey()) {
-    updateObStatus('off');
-    return;
-  }
-  updateObStatus('loading');
-  const obData = await loadFromOb();
-  if (obData) {
-    // 合并：以 OB 为主，补充本地独有的数据
-    DB = mergeData(obData, local);
-    saveToLocal(DB);
-    updateObStatus('ok');
-    renderToday();
-    renderAll();
-  } else {
-    updateObStatus('error');
-    // OB 读取失败，把本地数据推送到 OB
-    await saveToOb(local);
-  }
-}
-
-// ---- 合并两份数据（双向去重）----
-function mergeData(a, b) {
-  const merged = { homeworks: [...a.homeworks], checkins: { ...a.checkins } };
-  // 补充 b 里独有的作业
-  b.homeworks.forEach(hw => {
-    const exists = merged.homeworks.find(h => h.id === hw.id);
-    if (!exists) merged.homeworks.push(hw);
-  });
-  // 合并打卡记录
-  Object.keys(b.checkins).forEach(date => {
-    if (!merged.checkins[date]) merged.checkins[date] = {};
-    Object.assign(merged.checkins[date], b.checkins[date]);
-  });
-  return merged;
-}
-
-// ---- OB 状态指示 ----
-function updateObStatus(status) {
-  const dot = document.getElementById('ob-status-dot');
-  const text = document.getElementById('ob-status-text');
-  if (!dot) return;
-  const map = {
-    off:     ['⚪', '未配置 OB 同步'],
-    loading: ['🔄', '同步中...'],
-    ok:      ['🟢', 'OB 同步正常'],
-    saved:   ['🟢', '已保存到 OB'],
-    error:   ['🔴', 'OB 连接失败（使用本地存储）']
-  };
-  const [d, t] = map[status] || ['⚪', ''];
-  dot.textContent = d;
-  text.textContent = t;
-}
-
-let currentUploadId = null;
-let calYear, calMonth;
-let currentCat = 'school';
-
-// ====== UTILS ======
-function genId() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function today() { return new Date().toISOString().slice(0,10); }
-function formatDate(d) {
-  if (!d) return '';
-  const dt = new Date(d + 'T00:00:00');
-  return `${dt.getMonth()+1}月${dt.getDate()}日`;
-}
-function daysUntil(d) {
-  if (!d) return null;
-  const now = new Date(today());
-  const due = new Date(d);
-  return Math.floor((due - now) / 86400000);
+
+function load() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY) || '{"homeworks":[],"checkins":{}}'); }
+  catch (e) { return { homeworks: [], checkins: {} }; }
 }
 
-function toast(msg, dur=2200) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), dur);
-}
+function save(data) { localStorage.setItem(DB_KEY, JSON.stringify(data)); }
 
-// ====== TABS ======
-function switchTab(tab) {
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-  event.target.classList.add('active');
-  if (tab === 'today') renderToday();
-  if (tab === 'all') renderAll();
-  if (tab === 'checkin') renderCalendar();
-  if (tab === 'sync') loadBackupConfig();
-}
-
-let currentViewDate = today(); // 当前查看的日期
-
-// ====== DATE SELECTOR ======
-function navigateDate(delta) {
-  const d = new Date(currentViewDate);
+function navigateDay(delta) {
+  var d = new Date(viewDate);
   d.setDate(d.getDate() + delta);
-  currentViewDate = d.toISOString().slice(0, 10);
-  document.getElementById('date-picker').value = currentViewDate;
-  updateDateDisplay();
-  renderToday();
+  viewDate = d.toISOString().slice(0,10);
+  render();
 }
 
-function selectCustomDate() {
-  currentViewDate = document.getElementById('date-picker').value;
-  updateDateDisplay();
-  renderToday();
+function getDateLabel(ds) {
+  if (ds === today()) return '今日';
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate()-1);
+  if (ds === yesterday.toISOString().slice(0,10)) return '昨日';
+  return (new Date(ds).getMonth()+1) + '月' + new Date(ds).getDate() + '日';
 }
 
-function updateDateDisplay() {
-  const d = new Date(currentViewDate + 'T00:00:00');
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-  const week = weekDays[d.getDay()];
+function render() {
+  var db = load();
+  var todayStr = today();
   
-  if (currentViewDate === today()) {
-    document.getElementById('current-date-label').textContent = '今日作业';
+  document.getElementById('dateStr').textContent = new Date().toLocaleDateString('zh-CN', {weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('viewDateLabel').textContent = getDateLabel(viewDate);
+  document.getElementById('hwDate').value = viewDate;
+  
+  var hws = db.homeworks.filter(function(h) { return !h.deleted && h.dueDate === viewDate; });
+  var school = hws.filter(function(h) { return h.type === 'school'; });
+  var extra = hws.filter(function(h) { return h.type === 'extra'; });
+  var checkin = db.checkins[viewDate] || {};
+  
+  var doneCount = hws.filter(function(h) { return checkin[h.id]; }).length;
+  document.getElementById('statTotal').textContent = hws.length;
+  document.getElementById('statDone').textContent = doneCount;
+  document.getElementById('statLeft').textContent = hws.length - doneCount;
+  
+  var htmlSchool = school.length ? school.map(function(h) { return hwCard(h, checkin[h.id]); }).join('') : '<div class="empty"><div class="icon">📚</div><p>暂无学校作业</p></div>';
+  var htmlExtra = extra.length ? extra.map(function(h) { return hwCard(h, checkin[h.id]); }).join('') : '<div class="empty"><div class="icon">🎹</div><p>暂无课外班作业</p></div>';
+  
+  document.getElementById('schoolList').innerHTML = htmlSchool;
+  document.getElementById('extraList').innerHTML = htmlExtra;
+}
+
+function hwCard(hw, done) {
+  var checkHtml = done ? '<span style="color:white">✓</span>' : '';
+  var doneClass = done ? 'done' : '';
+  return '<div class="hw-card ' + doneClass + '">' +
+    '<div class="check ' + (done ? 'checked' : '') + '" onclick="toggleCheck(\'' + hw.id + '\')">' + checkHtml + '</div>' +
+    '<div class="info">' +
+      '<div class="title">' + hw.title + '</div>' +
+      '<div class="meta"><span class="type ' + hw.type + '">' + (hw.type === 'school' ? '🏫' : '🎨') + '</span>' + (hw.subject || '') + '</div>' +
+    '</div>' +
+    '<button class="del" onclick="delHw(\'' + hw.id + '\')">×</button>' +
+  '</div>';
+}
+
+function toggleCheck(id) {
+  var db = load();
+  if (!db.checkins[viewDate]) db.checkins[viewDate] = {};
+  if (db.checkins[viewDate][id]) {
+    delete db.checkins[viewDate][id];
   } else {
-    document.getElementById('current-date-label').textContent = `${d.getMonth()+1}月${d.getDate()}日`;
+    db.checkins[viewDate][id] = true;
   }
-  document.getElementById('current-date-week').textContent = week;
+  save(db);
+  render();
 }
 
-function getDateLabel(dateStr) {
-  if (dateStr === today()) return '今日作业';
-  const d = new Date(dateStr);
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  if (dateStr === yesterday.toISOString().slice(0, 10)) return '昨日作业';
-  return `${d.getMonth()+1}月${d.getDate()}日`;
+function delHw(id) {
+  if (!confirm('确定删除？')) return;
+  var db = load();
+  var hw = db.homeworks.find(function(h) { return h.id === id; });
+  if (hw) hw.deleted = true;
+  save(db);
+  render();
+  toast('已删除');
 }
 
-// ====== RENDER ======
-function renderToday() {
-  const viewDate = currentViewDate;
-  updateDateDisplay();
+function openAdd() {
+  document.getElementById('hwType').value = 'school';
+  document.getElementById('hwSubject').value = '';
+  document.getElementById('hwTitle').value = '';
+  document.getElementById('hwDate').value = viewDate;
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeAdd() {
+  document.getElementById('addModal').classList.remove('open');
+}
+
+function saveHw() {
+  var title = document.getElementById('hwTitle').value.trim();
+  if (!title) { toast('请输入作业内容'); return; }
   
-  const isToday = viewDate === today();
-  const checkin = DB.checkins[viewDate] || {};
-  
-  // 过滤作业：今日只看当天的，过往日期看当天的
-  let hws = DB.homeworks.filter(h => !h.deleted && h.dueDate === viewDate);
-  
-  if (isToday) {
-    // 今日：只显示未完成的
-    hws = hws.filter(h => !checkin[h.id]);
-  }
-  
-  const schoolHws = hws.filter(h => h.type === 'school');
-  const extraHws = hws.filter(h => h.type === 'extra');
-
-  renderList('list-today-school', schoolHws, viewDate);
-  renderList('list-today-extra', extraHws, viewDate);
-
-  // Stats - 统计当日所有作业（包括已完成的）
-  const allHws = DB.homeworks.filter(h => !h.deleted && h.dueDate === viewDate);
-  const doneCount = allHws.filter(h => checkin[h.id]).length;
-  const total = allHws.length;
-
-  let statsHtml = '';
-  statsHtml += statCard('📚', total, '总作业数');
-  statsHtml += statCard('✅', doneCount, '已完成');
-  statsHtml += statCard('⏳', total - doneCount, '待完成');
-  const pct = total ? Math.round(doneCount/total*100) : 0;
-  statsHtml += statCard('🎯', pct + '%', '完成率');
-  document.getElementById('today-stats').innerHTML = statsHtml;
-
-  // Streak (only for today)
-  if (isToday) {
-    renderStreak();
-  } else {
-    document.getElementById('streak-area').innerHTML = '';
-  }
-}
-
-function statCard(emoji, val, label) {
-  return `<div class="stat-card"><div class="stat-emoji">${emoji}</div><div class="stat-value">${val}</div><div class="stat-label">${label}</div></div>`;
-}
-
-function renderStreak() {
-  let streak = 0;
-  const d = new Date();
-  for (let i = 1; i <= 365; i++) {
-    const ds = d.toISOString().slice(0,10);
-    const ci = DB.checkins[ds] || {};
-    const hws = DB.homeworks.filter(h => !h.deleted);
-    if (hws.length === 0) { d.setDate(d.getDate()-1); streak++; continue; }
-    const done = hws.filter(h => ci[h.id]).length;
-    if (done === hws.length && hws.length > 0) { streak++; d.setDate(d.getDate()-1); }
-    else break;
-  }
-  const area = document.getElementById('streak-area');
-  if (streak > 0) {
-    area.innerHTML = `<div class="streak-banner"><div class="streak-fire">🔥</div><div class="streak-text"><h3>连续打卡 ${streak} 天！</h3><p>太棒了，保持下去！</p></div></div>`;
-  } else { area.innerHTML = ''; }
-}
-
-function renderList(containerId, hws, forDate) {
-  const el = document.getElementById(containerId);
-  if (!hws.length) {
-    el.innerHTML = `<div class="empty-state"><span class="empty-emoji">🌸</span><p>暂无作业，好好休息！</p></div>`;
-    return;
-  }
-  const checkin = DB.checkins[forDate] || {};
-  el.innerHTML = hws.map((hw, idx) => hwCard(hw, checkin[hw.id], forDate, idx)).join('');
-}
-
-function hwCard(hw, done, dateCtx, idx) {
-  const d = daysUntil(hw.dueDate);
-  let dueBadge = '';
-  if (hw.dueDate) {
-    if (d < 0) dueBadge = `<span class="hw-tag overdue">逾期${Math.abs(d)}天</span>`;
-    else if (d === 0) dueBadge = `<span class="hw-tag due-soon">今天截止</span>`;
-    else if (d <= 2) dueBadge = `<span class="hw-tag due-soon">还剩${d}天</span>`;
-    else dueBadge = `<span class="hw-tag">${formatDate(hw.dueDate)}截止</span>`;
-  }
-
-  const medias = hw.media || [];
-  const mediaHtml = medias.length ? `
-    <div class="media-grid">
-      ${medias.map((m,mi) => {
-        if (m.type.startsWith('video')) {
-          return `<div class="media-thumb" onclick="openViewer('${hw.id}',${mi})">
-            <video src="${m.data}" muted></video>
-            <div class="play-icon">▶️</div>
-            <button class="del-media" onclick="event.stopPropagation();deleteMedia('${hw.id}',${mi})">✕</button>
-            <button class="dl-media" onclick="event.stopPropagation();downloadMedia('${hw.id}',${mi})" title="下载">↓</button>
-          </div>`;
-        } else {
-          return `<div class="media-thumb" onclick="openViewer('${hw.id}',${mi})">
-            <img src="${m.data}" alt="作业图片" loading="lazy">
-            <button class="del-media" onclick="event.stopPropagation();deleteMedia('${hw.id}',${mi})">✕</button>
-            <button class="dl-media" onclick="event.stopPropagation();downloadMedia('${hw.id}',${mi})" title="下载">↓</button>
-          </div>`;
-        }
-      }).join('')}
-    </div>` : '';
-
-  return `
-  <div class="hw-card ${hw.type} ${done?'completed':''}" id="card-${hw.id}" style="animation-delay:${idx*0.05}s">
-    <div class="hw-card-header">
-      <div class="hw-check ${done?'checked':''}" onclick="toggleDone('${hw.id}','${dateCtx}')" title="标记完成">
-        ${done ? '✓' : ''}
-      </div>
-      <div class="hw-info">
-        <div class="hw-title">${hw.subject ? `[${hw.subject}] ` : ''}${hw.title}</div>
-        <div class="hw-meta">
-          <span class="hw-tag ${hw.type}">${hw.type==='school'?'🏫 学校':'🎨 课外班'}</span>
-          ${dueBadge}
-        </div>
-      </div>
-    </div>
-    ${hw.desc ? `<div class="hw-desc">${hw.desc}</div>` : ''}
-    ${medias.length ? mediaHtml : ''}
-    <div class="hw-actions">
-      <button class="btn btn-done btn-sm" onclick="uploadMedia('${hw.id}')">📎 上传文件</button>
-      ${medias.length ? `<button class="btn-download-all btn-sm" onclick="downloadAllMedia('${hw.id}')">⬇️ 下载全部(${medias.length})</button>` : ''}
-      <button class="btn btn-white btn-sm" onclick="editHw('${hw.id}')">✏️ 编辑</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteHw('${hw.id}')">🗑️</button>
-    </div>
-  </div>`;
-}
-
-function renderAll() {
-  const hws = DB.homeworks.filter(h => !h.deleted && h.type === currentCat);
-  hws.sort((a,b) => (a.dueDate||'9999') < (b.dueDate||'9999') ? -1 : 1);
-  const todayStr = today();
-  const checkin = DB.checkins[todayStr] || {};
-  const el = document.getElementById('list-all');
-  if (!hws.length) {
-    el.innerHTML = `<div class="empty-state"><span class="empty-emoji">📖</span><p>暂无${currentCat==='school'?'学校':'课外班'}作业</p></div>`;
-    return;
-  }
-  el.innerHTML = hws.map((hw,i) => hwCard(hw, checkin[hw.id], todayStr, i)).join('');
-}
-
-function filterCat(cat) {
-  currentCat = cat;
-  document.getElementById('cat-school-btn').classList.toggle('active', cat==='school');
-  document.getElementById('cat-extra-btn').classList.toggle('active', cat==='extra');
-  renderAll();
-}
-
-// ====== CHECKIN ======
-function toggleDone(hwId, dateStr) {
-  if (!DB.checkins[dateStr]) DB.checkins[dateStr] = {};
-  DB.checkins[dateStr][hwId] = !DB.checkins[dateStr][hwId];
-  saveData(DB);
-  renderToday();
-  renderAll();
-  if (DB.checkins[dateStr][hwId]) {
-    toast('✅ 作业完成！真棒！');
-    triggerAutoSync('checkin');
-  }
-}
-
-// ====== CALENDAR ======
-function renderCalendar() {
-  const now = new Date();
-  if (!calYear) { calYear = now.getFullYear(); calMonth = now.getMonth(); }
-  document.getElementById('month-label').textContent = `${calYear}年${calMonth+1}月`;
-
-  const firstDay = new Date(calYear, calMonth, 1).getDay();
-  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
-  const todayStr = today();
-
-  const weekdays = ['日','一','二','三','四','五','六'];
-  let html = weekdays.map(w => `<div class="cal-weekday">${w}</div>`).join('');
-
-  // Empty cells
-  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day empty"></div>`;
-
-  const hws = DB.homeworks.filter(h => !h.deleted);
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isToday = ds === todayStr;
-    const isFuture = ds > todayStr;
-    const ci = DB.checkins[ds] || {};
-    const doneCount = hws.filter(h => ci[h.id]).length;
-    const total = hws.length;
-
-    let cls = 'cal-day';
-    if (isToday) cls += ' today';
-    if (isFuture) cls += ' future';
-    else if (total === 0) cls += '';
-    else if (doneCount === total) cls += ' all-done';
-    else if (doneCount > 0) cls += ' partial';
-    else cls += ' none-done';
-
-    const clickFn = isFuture ? '' : `onclick="showDayDetail('${ds}')"`;
-    html += `<div class="${cls}" ${clickFn}><span>${d}</span>${!isFuture && total>0 ? '<div class="cal-dot"></div>' : ''}</div>`;
-  }
-
-  document.getElementById('calendar').innerHTML = html;
-
-  // Month stats
-  let totalDays = 0, allDoneDays = 0, partialDays = 0;
-  for (let d = 1; d <= daysInMonth; d++) {
-    const ds = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    if (ds > todayStr) continue;
-    const ci = DB.checkins[ds] || {};
-    const doneCount = hws.filter(h => ci[h.id]).length;
-    if (hws.length === 0) continue;
-    totalDays++;
-    if (doneCount === hws.length) allDoneDays++;
-    else if (doneCount > 0) partialDays++;
-  }
-  let statsHtml = statCard('📅', totalDays, '有作业的天数');
-  statsHtml += statCard('🌟', allDoneDays, '全部完成天数');
-  statsHtml += statCard('⚡', partialDays, '部分完成天数');
-  statsHtml += statCard('🏆', totalDays ? Math.round(allDoneDays/totalDays*100)+'%' : '0%', '全勤率');
-  document.getElementById('month-stats').innerHTML = statsHtml;
-}
-
-function prevMonth() {
-  calMonth--;
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  renderCalendar();
-  document.getElementById('day-detail').classList.remove('open');
-}
-function nextMonth() {
-  calMonth++;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  renderCalendar();
-  document.getElementById('day-detail').classList.remove('open');
-}
-
-function showDayDetail(ds) {
-  const hws = DB.homeworks.filter(h => !h.deleted);
-  const ci = DB.checkins[ds] || {};
-  const detail = document.getElementById('day-detail');
-
-  if (!hws.length) {
-    detail.innerHTML = `<h4>📅 ${formatDate(ds)}</h4><p style="color:var(--text-light);font-size:0.9rem">当天没有作业记录</p>`;
-    detail.classList.add('open');
-    return;
-  }
-
-  let items = hws.map(hw => {
-    const done = ci[hw.id];
-    return `<div class="detail-item">
-      <div class="status-dot ${done?'dot-done':'dot-miss'}"></div>
-      <span style="flex:1">${hw.subject?`[${hw.subject}] `:''}${hw.title}</span>
-      <span style="font-size:0.78rem;color:var(--text-light)">${done?'✅ 完成':'❌ 未完成'}</span>
-    </div>`;
-  }).join('');
-
-  const doneCount = hws.filter(h => ci[h.id]).length;
-  const pct = Math.round(doneCount/hws.length*100);
-
-  detail.innerHTML = `
-    <h4>📅 ${formatDate(ds)} — 完成 ${doneCount}/${hws.length} 项</h4>
-    <div class="progress-row">
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <span class="progress-label">${pct}%</span>
-    </div>
-    <br>
-    ${items}`;
-  detail.classList.add('open');
-}
-
-// ====== MODAL ======
-function openModal(type) {
-  editingId = null;
-  document.getElementById('form-type').value = type || 'school';
-  document.getElementById('form-title').value = '';
-  document.getElementById('form-subject').value = '';
-  document.getElementById('form-desc').value = '';
-  document.getElementById('form-due').value = currentViewDate;
-  document.getElementById('modal-title').textContent = type==='extra' ? '🎨 添加课外班' : '🏫 添加学校作业';
-  document.getElementById('add-modal').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('add-modal').classList.remove('open');
-  editingId = null;
-}
-function closeModalOnBg(e) { if (e.target === document.getElementById('add-modal')) closeModal(); }
-
-let editingId = null;
-function editHw(id) {
-  const hw = DB.homeworks.find(h => h.id === id);
-  if (!hw) return;
-  editingId = id;
-  document.getElementById('form-type').value = hw.type;
-  document.getElementById('form-title').value = hw.title;
-  document.getElementById('form-subject').value = hw.subject || '';
-  document.getElementById('form-desc').value = hw.desc || '';
-  document.getElementById('form-due').value = hw.dueDate || '';
-  document.getElementById('modal-title').textContent = '✏️ 编辑作业';
-  document.getElementById('add-modal').classList.add('open');
-}
-
-// ====== AI ======
-const API_KEY_STORAGE = 'homework_ai_key';
-
-function getAiKey() {
-  return localStorage.getItem(API_KEY_STORAGE) || '';
-}
-
-function setAiKey(key) {
-  localStorage.setItem(API_KEY_STORAGE, key);
-}
-
-async function aiFillHomework() {
-  var prompt = document.getElementById('ai-prompt').value.trim();
-  if (!prompt) { showAiError('请输入作业内容'); return; }
-  
-  var apiKey = document.getElementById('ai-api-key').value.trim() || getAiKey();
-  if (!apiKey) { showAiError('请输入灵芽API Key'); return; }
-  
-  setAiKey(apiKey);
-  
-  var btn = document.querySelector('button[onclick="aiFillHomework()"]');
-  btn.disabled = true;
-  btn.textContent = '⏳ 识别中...';
-  
-  try {
-    var todayStr = new Date().toISOString().slice(0,10);
-    var userPrompt = '你是一个作业整理助手。请将用户输入的作业信息整理成 JSON 数组格式。每条作业包含：\n- title: 作业标题（必填）\n- subject: 科目/课程名\n- type: 类型，"school"表示学校作业，"extra"表示课外班\n- dueDate: 截止日期，格式 YYYY-MM-DD\n\n分析截止日期时：\n- "明天" = 明天\n- "后天" = 后天\n- "周五" 等 = 最近的周五\n- 今天是 ' + todayStr + '\n\n只返回 JSON 数组，不要其他内容。\n用户输入：\n' + prompt;
-    
-    var response = await fetch('https://api.lingyaai.cn/v1beta/models/gemini-2.0-flash:generateContent?key=' + apiKey, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: userPrompt }] }],
-        generationConfig: { responseMimeType: 'application/json' }
-      })
-    });
-    
-    if (!response.ok) throw new Error('API 请求失败');
-    
-    var data = await response.json();
-    var content = data.candidates[0].content.parts[0].text;
-    
-    var jsonMatch = content.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) throw new Error('无法解析结果');
-    
-    var items = JSON.parse(jsonMatch[0]);
-    showAiPreview(items);
-    hideAiError();
-  } catch (e) {
-    showAiError(e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '✨ 识别';
-  }
-}
-
-function showAiError(msg) {
-  const el = document.getElementById('ai-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
-function hideAiError() {
-  document.getElementById('ai-error').style.display = 'none';
-}
-
-let aiParsedItems = [];
-
-function showAiPreview(items) {
-  aiParsedItems = items;
-  const container = document.getElementById('ai-preview');
-  
-  if (!items.length) {
-    container.style.display = 'none';
-    return;
-  }
-  
-  container.innerHTML = `
-    <div style="margin-bottom:8px;font-weight:700;font-size:0.9rem">识别结果（${items.length} 条）：</div>
-    ${items.map((item, i) => `
-      <div class="ai-card" id="ai-card-${i}">
-        <div class="ai-card-header">
-          <span class="ai-card-type ${item.type || 'school'}">${item.type === 'extra' ? '🎨 课外班' : '🏫 学校'}</span>
-          ${item.subject ? `<span class="ai-card-subject">${item.subject}</span>` : ''}
-        </div>
-        <div class="ai-card-title">${item.title}</div>
-        ${item.dueDate ? `<div class="ai-card-due">📅 截止：${item.dueDate}</div>` : ''}
-        <div class="ai-card-actions">
-          <button class="edit-btn" onclick="editAiItem(${i})">📝 编辑</button>
-          <button class="del-btn" onclick="deleteAiItem(${i})">🗑️ 删除</button>
-        </div>
-      </div>
-    `).join('')}
-    <div style="margin-top:12px;display:flex;gap:8px">
-      <button class="btn btn-primary" style="flex:1" onclick="saveAllAiItems()">✅ 全部保存</button>
-      <button class="btn btn-white" style="flex:1" onclick="clearAiPreview()">清空</button>
-    </div>
-  `;
-  container.style.display = 'block';
-}
-
-function editAiItem(index) {
-  const item = aiParsedItems[index];
-  document.getElementById('form-type').value = item.type || 'school';
-  document.getElementById('form-title').value = item.title;
-  document.getElementById('form-subject').value = item.subject || '';
-  document.getElementById('form-due').value = item.dueDate || currentViewDate;
-  document.getElementById('form-desc').value = item.desc || '';
-  
-  // 填充到表单后删除该项
-  aiParsedItems.splice(index, 1);
-  showAiPreview(aiParsedItems);
-}
-
-function deleteAiItem(index) {
-  aiParsedItems.splice(index, 1);
-  showAiPreview(aiParsedItems);
-}
-
-function saveAllAiItems() {
-  if (!aiParsedItems.length) return;
-  
-  aiParsedItems.forEach(item => {
-    DB.homeworks.push({
-      id: genId(),
-      type: item.type || 'school',
-      title: item.title,
-      subject: item.subject || '',
-      desc: item.desc || '',
-      dueDate: item.dueDate || currentViewDate,
-      createdAt: today()
-    });
-  });
-  
-  saveData(DB);
-  renderToday();
-  closeModal();
-  clearAiPreview();
-  toast(`✅ 已保存 ${aiParsedItems.length} 条作业`);
-}
-
-function clearAiPreview() {
-  aiParsedItems = [];
-  document.getElementById('ai-preview').style.display = 'none';
-  document.getElementById('ai-prompt').value = '';
-}
-
-// ====== GIST ======
-const GIST_ID_KEY = 'homework_gist_id';
-const GIST_TOKEN_KEY = 'homework_gist_token';
-
-function getGistId() { return localStorage.getItem(GIST_ID_KEY) || ''; }
-function getGistToken() { return localStorage.getItem(GIST_TOKEN_KEY) || ''; }
-function setGistId(id) { localStorage.setItem(GIST_ID_KEY, id); }
-function setGistToken(token) { localStorage.setItem(GIST_TOKEN_KEY, token); }
-
-async function gistPush() {
-  const id = getGistId(), token = getGistToken();
-  if (!token) { toast('⚠️ 请先配置 GitHub Token'); return; }
-  if (!id) { toast('⚠️ 请先配置 Gist ID'); return; }
-  
-  try {
-    const hws = DB.homeworks.filter(h => !h.deleted).map(h => ({
-      id: h.id, title: h.title, type: h.type, subject: h.subject, desc: h.desc, dueDate: h.dueDate
-    }));
-    
-    const res = await fetch(`https://api.github.com/gists/${id}`, {
-      method: 'PATCH',
-      headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ files: { 'homework.json': { content: JSON.stringify(hws, null, 2) } } })
-    });
-    
-    if (!res.ok) throw new Error('推送失败');
-    toast(`✅ 已推送 ${hws.length} 条到 Gist`);
-  } catch (e) {
-    toast('❌ ' + e.message);
-  }
-}
-
-async function gistPull() {
-  const id = getGistId();
-  if (!id) { toast('⚠️ 请先配置 Gist ID'); return; }
-  
-  try {
-    const headers = { 'Accept': 'application/vnd.github.v3+json' };
-    const token = getGistToken();
-    if (token) headers['Authorization'] = `token ${token}`;
-    
-    const res = await fetch(`https://api.github.com/gists/${id}`, { headers });
-    if (!res.ok) throw new Error('拉取失败');
-    
-    const data = await res.json();
-    const file = data.files['homework.json'];
-    if (!file) throw new Error('未找到 homework.json');
-    
-    const imported = JSON.parse(file.content);
-    let added = 0;
-    imported.forEach(item => {
-      if (!item.title) return;
-      const exists = DB.homeworks.find(h => h.id === item.id || (!h.deleted && h.title === item.title));
-      if (!exists) {
-        DB.homeworks.push({ id: item.id || genId(), type: item.type||'school', title: item.title, subject: item.subject||'', desc: item.desc||'', dueDate: item.dueDate||'' });
-        added++;
-      }
-    });
-    
-    saveData(DB);
-    renderToday();
-    toast(`🔄 拉取成功 +${added} 条`);
-  } catch (e) {
-    toast('❌ ' + e.message);
-  }
-}
-
-function saveHomework() {
-  const title = document.getElementById('form-title').value.trim();
-  if (!title) { toast('⚠️ 请填写作业标题！'); return; }
-
-  if (editingId) {
-    const hw = DB.homeworks.find(h => h.id === editingId);
-    if (hw) {
-      hw.type = document.getElementById('form-type').value;
-      hw.title = title;
-      hw.subject = document.getElementById('form-subject').value.trim();
-      hw.desc = document.getElementById('form-desc').value.trim();
-      hw.dueDate = document.getElementById('form-due').value;
-    }
-    editingId = null;
-    toast('✏️ 作业已更新！');
-  } else {
-    DB.homeworks.push({
-      id: genId(),
-      type: document.getElementById('form-type').value,
-      title,
-      subject: document.getElementById('form-subject').value.trim(),
-      desc: document.getElementById('form-desc').value.trim(),
-      dueDate: document.getElementById('form-due').value,
-      media: [],
-      createdAt: today()
-    });
-    toast('✅ 作业已添加！');
-  }
-
-  saveData(DB);
-  closeModal();
-  renderToday();
-  renderAll();
-  triggerAutoSync('save');
-}
-
-function deleteHw(id) {
-  if (!confirm('确定删除这条作业吗？')) return;
-  const hw = DB.homeworks.find(h => h.id === id);
-  if (hw) { hw.deleted = true; }
-  saveData(DB);
-  renderToday();
-  renderAll();
-  toast('🗑️ 作业已删除');
-}
-
-// ====== MEDIA UPLOAD ======
-function uploadMedia(hwId) {
-  currentUploadId = hwId;
-  document.getElementById('hw-file-input').click();
-}
-
-function handleFileUpload(event) {
-  const files = Array.from(event.target.files);
-  if (!files.length || !currentUploadId) return;
-
-  const hw = DB.homeworks.find(h => h.id === currentUploadId);
-  if (!hw) return;
-
-  let loaded = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (!hw.media) hw.media = [];
-      hw.media.push({ type: file.type, name: file.name, data: e.target.result });
-      loaded++;
-      if (loaded === files.length) {
-        saveData(DB);
-        renderToday();
-        renderAll();
-        toast(`📎 已上传 ${files.length} 个文件！`);
-        // auto upload to Synology Photos
-        const hw = DB.homeworks.find(h => h.id === currentUploadId);
-        if (hw && hw.media) {
-          for (let i = hw.media.length - files.length; i < hw.media.length; i++) {
-            autoUploadToSyno(currentUploadId, i);
-          }
-        }
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-  event.target.value = '';
-}
-
-function deleteMedia(hwId, mediaIdx) {
-  const hw = DB.homeworks.find(h => h.id === hwId);
-  if (hw && hw.media) {
-    hw.media.splice(mediaIdx, 1);
-    saveData(DB);
-    renderToday();
-    renderAll();
-    toast('🗑️ 文件已删除');
-  }
-}
-
-let currentViewerMedia = null;
-
-function openViewer(hwId, mediaIdx) {
-  const hw = DB.homeworks.find(h => h.id === hwId);
-  if (!hw || !hw.media) return;
-  const m = hw.media[mediaIdx];
-  currentViewerMedia = m;
-  const vc = document.getElementById('viewer-content');
-  document.getElementById('viewer-filename').textContent = m.name || '作业文件';
-  if (m.type.startsWith('video')) {
-    vc.innerHTML = `<video src="${m.data}" controls autoplay style="max-width:92vw;max-height:80vh;border-radius:12px"></video>`;
-  } else {
-    vc.innerHTML = `<img src="${m.data}" alt="${m.name}" style="max-width:92vw;max-height:80vh;border-radius:12px">`;
-  }
-  document.getElementById('media-viewer').classList.add('open');
-}
-
-function closeViewer() {
-  document.getElementById('media-viewer').classList.remove('open');
-  document.getElementById('viewer-content').innerHTML = '';
-  currentViewerMedia = null;
-}
-
-function closeViewerBg(e) {
-  if (e.target === document.getElementById('media-viewer')) closeViewer();
-}
-
-function downloadCurrent() {
-  if (!currentViewerMedia) return;
-  downloadBlob(currentViewerMedia.data, currentViewerMedia.name || 'homework_file');
-}
-
-function downloadMedia(hwId, mediaIdx) {
-  const hw = DB.homeworks.find(h => h.id === hwId);
-  if (!hw || !hw.media) return;
-  const m = hw.media[mediaIdx];
-  const filename = m.name || `作业_${hw.title}_${mediaIdx + 1}`;
-  downloadBlob(m.data, filename);
-  toast(`⬇️ 正在下载：${filename}`);
-}
-
-function downloadAllMedia(hwId) {
-  const hw = DB.homeworks.find(h => h.id === hwId);
-  if (!hw || !hw.media || !hw.media.length) return;
-  hw.media.forEach((m, i) => {
-    setTimeout(() => {
-      const filename = m.name || `${hw.title}_作业${i + 1}`;
-      downloadBlob(m.data, filename);
-    }, i * 300); // stagger downloads slightly
-  });
-  toast(`⬇️ 开始下载 ${hw.media.length} 个文件`);
-}
-
-function downloadBlob(dataUrl, filename) {
-  const a = document.createElement('a');
-  a.href = dataUrl;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
-
-// ====== BACKUP / RESTORE ======
-const BACKUP_FOLDER_KEY   = 'xiaoxingxing_backup_folder';
-const LAST_BACKUP_KEY     = 'xiaoxingxing_last_backup';
-const GIST_ID_KEY         = 'xiaoxingxing_gist_id';
-const GIST_TOKEN_KEY      = 'xiaoxingxing_gist_token';
-const SYNC_LOG_KEY        = 'xiaoxingxing_sync_log';
-
-function saveBackupFolder() {
-  const val = document.getElementById('backup-folder').value.trim();
-  localStorage.setItem(BACKUP_FOLDER_KEY, val);
-  document.getElementById('folder-saved-badge').style.display = val ? 'inline' : 'none';
-  toast('💾 备份位置已保存');
-}
-
-function loadBackupConfig() {
-  const folder = localStorage.getItem(BACKUP_FOLDER_KEY) || '';
-  document.getElementById('backup-folder').value = folder;
-  document.getElementById('folder-saved-badge').style.display = folder ? 'inline' : 'none';
-  // Show last backup info
-  const last = localStorage.getItem(LAST_BACKUP_KEY);
-  const infoEl = document.getElementById('last-backup-info');
-  const textEl = document.getElementById('last-backup-text');
-  if (last) {
-    const info = JSON.parse(last);
-    infoEl.style.display = 'block';
-    textEl.textContent = `📅 上次备份：${info.time}　📚 ${info.count} 条作业　📎 ${info.mediaCount} 个文件`;
-  }
-  loadGistCredentials();
-}
-
-async function exportToFolder() {
-  const btn = document.querySelector('.btn-backup-export');
-  const origText = btn.textContent;
-  btn.textContent = '⏳ 打包中...';
-  btn.disabled = true;
-
-  try {
-    const payload = {
-      version: 3,
-      exportedAt: new Date().toISOString(),
-      homeworks: DB.homeworks,
-      checkins: DB.checkins
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const dateStr = today().replace(/-/g, '');
-    const filename = `作业本备份_${dateStr}.json`;
-
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(a.href);
-
-    // Save last backup info
-    const mediaCount = DB.homeworks.reduce((n, h) => n + (h.media?.length || 0), 0);
-    const now = new Date();
-    const timeStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    localStorage.setItem(LAST_BACKUP_KEY, JSON.stringify({
-      time: timeStr,
-      count: DB.homeworks.filter(h => !h.deleted).length,
-      mediaCount,
-      filename
-    }));
-
-    addLog(`导出备份：${DB.homeworks.filter(h=>!h.deleted).length} 条作业，${mediaCount} 个文件`);
-    loadBackupConfig(); // refresh UI
-    toast(`✅ 备份已导出：${filename}`);
-  } finally {
-    btn.textContent = origText;
-    btn.disabled = false;
-  }
-}
-
-function importBackup(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const resultEl = document.getElementById('restore-result');
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.homeworks) throw new Error('格式错误，请选择正确的备份文件');
-
-      let addedTasks = 0, addedMedia = 0;
-      data.homeworks.forEach(hw => {
-        const exists = DB.homeworks.find(h => h.id === hw.id);
-        if (!exists) {
-          DB.homeworks.push(hw);
-          addedTasks++;
-        } else {
-          // 合并媒体文件
-          if (hw.media?.length) {
-            if (!exists.media) exists.media = [];
-            hw.media.forEach(m => {
-              const has = exists.media.some(em => em.name === m.name);
-              if (!has) { exists.media.push(m); addedMedia++; }
-            });
-          }
-        }
-      });
-      // 合并打卡记录
-      if (data.checkins) {
-        Object.keys(data.checkins).forEach(date => {
-          if (!DB.checkins[date]) DB.checkins[date] = {};
-          Object.assign(DB.checkins[date], data.checkins[date]);
-        });
-      }
-      saveData(DB);
-      renderToday();
-      renderAll();
-      addLog(`导入备份：+${addedTasks} 条作业，+${addedMedia} 个文件`);
-      resultEl.style.display = 'block';
-      resultEl.style.background = '#e8fff0';
-      resultEl.style.color = '#1a6e30';
-      resultEl.textContent = `✅ 导入成功！新增 ${addedTasks} 条作业，合并 ${addedMedia} 个媒体文件`;
-    } catch(err) {
-      resultEl.style.display = 'block';
-      resultEl.style.background = '#fee';
-      resultEl.style.color = '#c00';
-      resultEl.textContent = '❌ 导入失败：' + err.message;
-    }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
-
-// ---- Gist credentials ----
-function getGistId()    { return localStorage.getItem(GIST_ID_KEY) || ''; }
-function getGistToken() { return localStorage.getItem(GIST_TOKEN_KEY) || ''; }
-
-function saveGistId() {
-  const v = document.getElementById('gist-id').value.trim();
-  if (!v) { toast('⚠️ 请输入 Gist ID'); return; }
-  localStorage.setItem(GIST_ID_KEY, v);
-  document.getElementById('gist-id-saved-badge').style.display = 'inline';
-  toast('💾 Gist ID 已保存');
-}
-function clearGistId() {
-  localStorage.removeItem(GIST_ID_KEY);
-  document.getElementById('gist-id').value = '';
-  document.getElementById('gist-id-saved-badge').style.display = 'none';
-  toast('🗑️ 已清除');
-}
-function saveGistToken() {
-  const v = document.getElementById('gist-token').value.trim();
-  if (!v) { toast('⚠️ 请输入 Token'); return; }
-  localStorage.setItem(GIST_TOKEN_KEY, v);
-  document.getElementById('gist-token-saved-badge').style.display = 'inline';
-  toast('💾 Token 已保存');
-}
-function clearGistToken() {
-  localStorage.removeItem(GIST_TOKEN_KEY);
-  document.getElementById('gist-token').value = '';
-  document.getElementById('gist-token-saved-badge').style.display = 'none';
-  toast('🗑️ 已清除');
-}
-function loadGistCredentials() {
-  const id = getGistId(), token = getGistToken();
-  const idEl = document.getElementById('gist-id');
-  const tokenEl = document.getElementById('gist-token');
-  if (idEl) idEl.value = id;
-  if (tokenEl) tokenEl.value = token;
-  const idBadge = document.getElementById('gist-id-saved-badge');
-  const tokenBadge = document.getElementById('gist-token-saved-badge');
-  if (idBadge) idBadge.style.display = id ? 'inline' : 'none';
-  if (tokenBadge) tokenBadge.style.display = token ? 'inline' : 'none';
-}
-
-function toggleGistPanel() {
-  const body = document.getElementById('gist-panel-body');
-  const arrow = document.getElementById('gist-panel-arrow');
-  const open = body.style.display === 'none';
-  body.style.display = open ? 'block' : 'none';
-  arrow.style.transform = open ? 'rotate(180deg)' : '';
-  if (open) loadGistCredentials();
-}
-
-async function gistPullAndShow() {
-  const gistId = getGistId();
-  if (!gistId) { setStatus('err', '❌ 请先填写 Gist ID'); return; }
-  setStatus('loading', '⏳ 拉取中...');
-  try {
-    const headers = { 'Accept': 'application/vnd.github.v3+json' };
-    const token = getGistToken();
-    if (token) headers['Authorization'] = `token ${token}`;
-    const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const file = data.files['homework.json'];
-    if (!file) throw new Error('未找到 homework.json');
-    const imported = JSON.parse(file.content);
-    let added = 0;
-    imported.forEach(item => {
-      if (!item.title) return;
-      const exists = DB.homeworks.find(h => h.id === item.id || (!h.deleted && h.title === item.title && h.type === item.type));
-      if (!exists) {
-        DB.homeworks.push({ id: item.id || genId(), type: item.type||'school', title: item.title, subject: item.subject||'', desc: item.desc||'', dueDate: item.dueDate||'', media: [], createdAt: item.createdAt||today(), fromGist: true });
-        added++;
-      }
-    });
-    saveData(DB); renderToday(); renderAll();
-    addLog(`Gist 拉取：+${added} 条任务`);
-    setStatus('ok', `✅ 新增 ${added} 条作业任务`);
-  } catch(e) {
-    addLog('Gist 拉取失败：' + e.message, false);
-    setStatus('err', '❌ ' + e.message);
-  }
-}
-
-async function gistPushAndShow() {
-  const gistId = getGistId(), token = getGistToken();
-  if (!token) { setStatus('err', '❌ 需要 GitHub Token'); return; }
-  if (!gistId) { setStatus('err', '❌ 请先填写 Gist ID'); return; }
-  setStatus('loading', '⏳ 推送中...');
-  try {
-    const hws = DB.homeworks.filter(h => !h.deleted).map(h => ({
-      id: h.id, title: h.title, type: h.type, subject: h.subject, desc: h.desc, dueDate: h.dueDate, createdAt: h.createdAt
-    }));
-    const res = await fetch(`https://api.github.com/gists/${gistId}`, {
-      method: 'PATCH',
-      headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ files: { 'homework.json': { content: JSON.stringify(hws, null, 2) } } })
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    addLog(`Gist 推送：${hws.length} 条任务`);
-    setStatus('ok', `✅ 已推送 ${hws.length} 条任务`);
-  } catch(e) {
-    addLog('Gist 推送失败：' + e.message, false);
-    setStatus('err', '❌ ' + e.message);
-  }
-}
-
-// ---- log & status ----
-function getSyncLog() { try { return JSON.parse(localStorage.getItem(SYNC_LOG_KEY) || '[]'); } catch { return []; } }
-function addLog(msg, ok = true) {
-  const log = getSyncLog();
-  const now = new Date();
-  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} ${now.getMonth()+1}/${now.getDate()}`;
-  log.unshift({ msg, ok, time });
-  if (log.length > 30) log.pop();
-  localStorage.setItem(SYNC_LOG_KEY, JSON.stringify(log));
-}
-function setStatus(type, msg) {
-  const el = document.getElementById('sync-status');
-  if (!el) return;
-  el.className = 'sync-status ' + type;
-  el.textContent = msg;
-}
-
-// ====== AUTO SYNC ======
-let autoSyncTimer = null;
-const AUTO_SYNC_KEY = 'gist_auto_sync';
-
-function getAutoSyncEnabled() {
-  return localStorage.getItem(AUTO_SYNC_KEY) === 'true';
-}
-
-function toggleAutoSync() {
-  const enabled = document.getElementById('auto-sync-toggle').checked;
-  localStorage.setItem(AUTO_SYNC_KEY, enabled);
-  
-  if (enabled) {
-    setupAutoSyncTimer();
-    document.getElementById('auto-sync-badge').style.display = 'inline';
-    document.getElementById('auto-sync-status').style.display = 'block';
-    document.getElementById('auto-sync-status').textContent = '✅ 自动同步已开启，每分钟拉取';
-  } else {
-    clearInterval(autoSyncTimer);
-    autoSyncTimer = null;
-    document.getElementById('auto-sync-badge').style.display = 'none';
-    document.getElementById('auto-sync-status').style.display = 'none';
-  }
-}
-
-function setupAutoSyncTimer() {
-  if (autoSyncTimer) clearInterval(autoSyncTimer);
-  autoSyncTimer = setInterval(gistPullAuto, 60000); // 每分钟拉取
-}
-
-async function gistPullAuto() {
-  const gistId = getGistId();
-  if (!gistId) return;
-  try {
-    const headers = { 'Accept': 'application/vnd.github.v3+json' };
-    const token = getGistToken();
-    if (token) headers['Authorization'] = `token ${token}`;
-    const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const file = data.files['homework.json'];
-    if (!file) return;
-    const imported = JSON.parse(file.content);
-    let added = 0;
-    imported.forEach(item => {
-      if (!item.title) return;
-      const exists = DB.homeworks.find(h => h.id === item.id || (!h.deleted && h.title === item.title && h.type === item.type));
-      if (!exists) {
-        DB.homeworks.push({ id: item.id || genId(), type: item.type||'school', title: item.title, subject: item.subject||'', desc: item.desc||'', dueDate: item.dueDate||'', media: [], createdAt: item.createdAt||today(), fromGist: true });
-        added++;
-      }
-    });
-    if (added > 0) {
-      saveData(DB);
-      renderToday();
-      renderAll();
-      addLog(`自动拉取：+${added} 条`);
-      toast(`🔄 自动拉取 +${added} 条作业`);
-    }
-  } catch(e) {
-    console.error('自动同步失败:', e);
-  }
-}
-
-function loadGistAutoSyncSettings() {
-  const enabled = getAutoSyncEnabled();
-  document.getElementById('auto-sync-toggle').checked = enabled;
-  document.getElementById('auto-sync-status').style.display = enabled ? 'block' : 'none';
-  
-  if (enabled) {
-    document.getElementById('auto-sync-badge').style.display = 'inline';
-    document.getElementById('auto-sync-status').textContent = '✅ 自动同步已开启，每分钟拉取';
-    setupAutoSyncTimer();
-  }
-}
-
-// Stubs for compatibility
-function triggerAutoSync() { gistPullAuto(); }
-function fullSync() {}
-function updateSyncBar() {}
-
-function clearAllData() {
-  if (!confirm('⚠️ 确定清除所有作业数据吗？此操作不可撤销！')) return;
-  DB = { homeworks: [], checkins: {} };
-  saveData(DB);
-  renderToday();
-  renderAll();
-  toast('🗑️ 所有数据已清除');
-}
-
-function exportData() {
-  const blob = new Blob([JSON.stringify(DB, null, 2)], {type: 'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `homework_backup_${today()}.json`;
-  a.click();
-  toast('📤 数据已导出！');
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (data.homeworks) {
-        DB = data;
-        saveData(DB);
-        renderToday();
-        renderAll();
-        toast('📥 数据已导入！');
-      } else { toast('❌ 文件格式错误'); }
-    } catch { toast('❌ 解析失败'); }
-  };
-  reader.readAsText(file);
-}
-
-// ====== AI FILL ======
-const AI_KEY_STORAGE = 'xiaoxingxing_apikey';
-let selectedChipType = 'school';
-
-function selectChip(type) {
-  selectedChipType = type;
-  document.getElementById('chip-school').classList.toggle('active', type === 'school');
-  document.getElementById('chip-extra').classList.toggle('active', type === 'extra');
-  document.getElementById('form-type').value = type;
-}
-
-function syncChipFromSelect() {
-  const val = document.getElementById('form-type').value;
-  selectChip(val);
-}
-
-function saveApiKey() {
-  const key = document.getElementById('ai-api-key').value.trim();
-  if (!key) { toast('⚠️ 请输入 API Key'); return; }
-  localStorage.setItem(AI_KEY_STORAGE, key);
-  toast('💾 API Key 已保存！');
-}
-
-function loadApiKey() {
-  const k = localStorage.getItem(AI_KEY_STORAGE) || '';
-  document.getElementById('ai-api-key').value = k;
-  return k;
-}
-
-let parsedBatch = []; // holds AI-parsed homework array
-
-async function aiFill() {
-  const prompt = document.getElementById('ai-prompt').value.trim();
-  if (!prompt) { toast('⚠️ 请先输入作业描述'); return; }
-
-  const apiKey = loadApiKey();
-  if (!apiKey) {
-    showAiError('请先填写并保存 DeepSeek API Key（sk-...）');
-    return;
-  }
-
-  const btn = document.getElementById('ai-go-btn');
-  const btnText = document.getElementById('ai-btn-text');
-  const spinner = document.getElementById('ai-spinner');
-  hideAiError();
-  btn.disabled = true;
-  btnText.style.display = 'none';
-  spinner.style.display = 'inline';
-
-  const todayStr = today();
-  const systemPrompt = `你是一个帮助家长整理孩子作业的助手。
-用户可能一次输入多条作业（不同科目、不同课程）。
-请将每一条作业分别解析，返回一个JSON数组，每个元素对应一条作业。
-只返回纯JSON数组，不要有任何其他文字、注释或markdown格式。
-今天的日期是：${todayStr}
-默认作业类型参考：${selectedChipType === 'school' ? '学校作业(school)' : '课外班作业(extra)'}
-但如果某条作业明显是课外班（钢琴、画画、游泳、编程、舞蹈等兴趣班），type请设为extra；
-明显是学校科目（语文、数学、英语、物理等），type请设为school。
-
-每个元素格式：
-{
-  "type": "school" 或 "extra",
-  "subject": "科目或课程名，如：数学、语文、钢琴、英语",
-  "title": "简洁作业标题，15字以内",
-  "desc": "详细说明（页码/数量/具体要求），没有则为空字符串",
-  "dueDate": "截止日期YYYY-MM-DD，根据明天/后天/周X推算，不确定则为空字符串"
-}`;
-
-  try {
-    const res = await fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify({
-        model: 'deepseek-chat',
-        max_tokens: 800,
-        temperature: 0.1,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ]
-      })
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `HTTP ${res.status}`);
-    }
-
-    const data = await res.json();
-    const raw = data.choices?.[0]?.message?.content || '';
-    const clean = raw.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-
-    if (!Array.isArray(parsed) || parsed.length === 0) throw new Error('未能识别到作业内容');
-
-    parsedBatch = parsed.map((item, i) => ({ ...item, _id: i, _saved: false }));
-
-    if (parsedBatch.length === 1) {
-      // Single result: fill form directly as before
-      const item = parsedBatch[0];
-      fillField('form-type', item.type || selectedChipType);
-      selectChip(item.type || selectedChipType);
-      fillField('form-subject', item.subject || '');
-      fillField('form-title', item.title || '');
-      fillField('form-desc', item.desc || '');
-      fillField('form-due', item.dueDate || '');
-      document.getElementById('ai-prompt').value = '';
-      toast('✨ AI 已自动填写！请确认后保存');
-      document.getElementById('ai-preview-area').style.display = 'none';
-    } else {
-      // Multiple: show preview cards
-      document.getElementById('ai-prompt').value = '';
-      renderPreviewCards();
-    }
-
-  } catch(e) {
-    showAiError('AI 解析失败：' + e.message);
-  } finally {
-    btn.disabled = false;
-    btnText.style.display = 'inline';
-    spinner.style.display = 'none';
-  }
-}
-
-function renderPreviewCards() {
-  const area = document.getElementById('ai-preview-area');
-  const list = document.getElementById('ai-preview-list');
-  const count = document.getElementById('ai-preview-count');
-  const unsaved = parsedBatch.filter(i => !i._saved);
-  count.textContent = `共 ${parsedBatch.length} 条`;
-  area.style.display = 'block';
-
-  list.innerHTML = parsedBatch.map((item, idx) => {
-    const typeLabel = item.type === 'extra' ? '🎨 课外班' : '🏫 学校';
-    const typeClass = item.type === 'extra' ? 'extra' : 'school';
-    const toggleLabel = item.type === 'extra' ? '切换→学校' : '切换→课外班';
-    const savedClass = item._saved ? 'saved' : '';
-    return `
-    <div class="preview-card ${savedClass}" id="preview-card-${idx}">
-      <div class="preview-card-header">
-        <span class="preview-subject" style="color:${item.type==='extra'?'var(--extra-deep)':'var(--school-deep)'}">${item.subject || '未知科目'}</span>
-        <span class="preview-title">${item.title || ''}</span>
-        <button class="preview-del-btn" onclick="removePreviewItem(${idx})" title="删除这条">🗑</button>
-      </div>
-      ${item.desc ? `<div class="preview-desc">${item.desc}</div>` : ''}
-      <div class="preview-meta">
-        <span class="preview-tag ${typeClass}">${typeLabel}</span>
-        ${item.dueDate ? `<span class="preview-tag due">📅 ${formatDate(item.dueDate)}</span>` : '<span class="preview-tag" style="background:#f0f0f0;color:#aaa">无截止日期</span>'}
-      </div>
-      ${!item._saved ? `
-      <div class="preview-actions">
-        <button class="preview-type-toggle ${typeClass}" onclick="togglePreviewType(${idx})">${toggleLabel}</button>
-        <button class="preview-save-btn" onclick="savePreviewItem(${idx})">✅ 保存这条</button>
-      </div>` : `<div style="font-size:0.75rem;color:var(--grass-deep);font-weight:700;margin-top:6px">✅ 已保存</div>`}
-    </div>`;
-  }).join('');
-}
-
-function togglePreviewType(idx) {
-  const item = parsedBatch[idx];
-  item.type = item.type === 'school' ? 'extra' : 'school';
-  renderPreviewCards();
-}
-
-function removePreviewItem(idx) {
-  parsedBatch.splice(idx, 1);
-  // re-index
-  parsedBatch = parsedBatch.map((item, i) => ({ ...item, _id: i }));
-  if (parsedBatch.length === 0) { clearPreview(); return; }
-  renderPreviewCards();
-}
-
-function savePreviewItem(idx) {
-  const item = parsedBatch[idx];
-  DB.homeworks.push({
-    id: genId(),
-    type: item.type || 'school',
-    title: item.title || '作业',
-    subject: item.subject || '',
-    desc: item.desc || '',
-    dueDate: item.dueDate || '',
-    media: [],
+  var db = load();
+  db.homeworks.push({
+    id: Date.now().toString(),
+    type: document.getElementById('hwType').value,
+    subject: document.getElementById('hwSubject').value.trim(),
+    title: title,
+    dueDate: document.getElementById('hwDate').value,
     createdAt: today()
   });
-  item._saved = true;
-  saveData(DB);
-  renderPreviewCards();
-  renderToday();
-  renderAll();
-  toast(`✅ 已保存：${item.subject} - ${item.title}`);
+  save(db);
+  closeAdd();
+  render();
+  toast('已保存');
 }
 
-function saveAllParsed() {
-  const unsaved = parsedBatch.filter(i => !i._saved);
-  if (!unsaved.length) { toast('全部已保存！'); return; }
-  unsaved.forEach(item => {
-    DB.homeworks.push({
-      id: genId(),
-      type: item.type || 'school',
-      title: item.title || '作业',
-      subject: item.subject || '',
-      desc: item.desc || '',
-      dueDate: item.dueDate || '',
-      media: [],
-      createdAt: today()
-    });
-    item._saved = true;
-  });
-  saveData(DB);
-  renderPreviewCards();
-  renderToday();
-  renderAll();
-  toast(`🎉 已批量保存 ${unsaved.length} 条作业！`);
-  triggerAutoSync('save');
-  setTimeout(() => closeModal(), 800);
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
 }
 
-function clearPreview() {
-  parsedBatch = [];
-  document.getElementById('ai-preview-area').style.display = 'none';
-  document.getElementById('ai-preview-list').innerHTML = '';
-}
-
-function fillField(id, value) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.value = value;
-  el.classList.remove('ai-filled');
-  void el.offsetWidth; // reflow to restart animation
-  el.classList.add('ai-filled');
-}
-
-function showAiError(msg) {
-  const el = document.getElementById('ai-error');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-function hideAiError() {
-  document.getElementById('ai-error').style.display = 'none';
-}
-
-function init() {
-  var local = loadFromLocal();
-  DB = local;
-  document.getElementById('date-picker').value = today();
-  renderToday();
-  document.getElementById('form-due').value = today();
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') { closeModal(); closeViewer(); }
+document.getElementById('addModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAdd();
 });
 
-init();
+render();
 </script>
 </body>
 </html>
